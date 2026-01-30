@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Math Fighter - Algonova</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
@@ -364,7 +367,102 @@
         }
 
         .character.lose {
-            filter: grayscale(50%);
+            filter: grayscale(30%);
+        }
+
+        .character.win {
+            animation: winner-bounce 0.5s ease-in-out infinite;
+        }
+
+        @keyframes winner-bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* LOSE ANIMATIONS per character */
+        .character.lose.panda-lose .panda-sprite {
+            animation: panda-cry 0.5s ease-in-out infinite;
+        }
+
+        .character.lose.satoru-lose .satoru-sprite {
+            animation: satoru-kneel 1s ease-out forwards;
+        }
+
+        .character.lose.blaze-lose .blaze-sprite {
+            animation: blaze-fall 1s ease-out forwards;
+        }
+
+        @keyframes panda-cry {
+            0%, 100% { transform: translateY(0) rotate(-2deg); }
+            50% { transform: translateY(3px) rotate(2deg); }
+        }
+
+        @keyframes satoru-kneel {
+            0% { transform: translateY(0) scale(1, 1); }
+            100% { transform: translateY(40px) scale(1.1, 0.7); }
+        }
+
+        @keyframes blaze-fall {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(20px) rotate(-10deg); }
+            100% { transform: translateY(50px) rotate(-15deg) scale(1.1, 0.8); }
+        }
+
+        /* FIREWORKS for winner */
+        .fireworks {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+            z-index: 55;
+        }
+
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: firework-burst 1s ease-out infinite;
+        }
+
+        .firework:nth-child(1) { background: #ff0; left: 50%; top: 20%; animation-delay: 0s; }
+        .firework:nth-child(2) { background: #f0f; left: 30%; top: 30%; animation-delay: 0.1s; }
+        .firework:nth-child(3) { background: #0ff; left: 70%; top: 25%; animation-delay: 0.2s; }
+        .firework:nth-child(4) { background: #f00; left: 40%; top: 15%; animation-delay: 0.3s; }
+        .firework:nth-child(5) { background: #0f0; left: 60%; top: 35%; animation-delay: 0.4s; }
+        .firework:nth-child(6) { background: #ff0; left: 45%; top: 10%; animation-delay: 0.5s; }
+        .firework:nth-child(7) { background: #f0f; left: 55%; top: 40%; animation-delay: 0.6s; }
+        .firework:nth-child(8) { background: #0ff; left: 35%; top: 20%; animation-delay: 0.7s; }
+
+        @keyframes firework-burst {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(2); opacity: 1; }
+            100% { transform: scale(3); opacity: 0; }
+        }
+
+        /* Crying tears for panda */
+        .tears {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .tear {
+            position: absolute;
+            width: 6px;
+            height: 12px;
+            background: #4fc3f7;
+            border-radius: 50% 50% 50% 50%;
+            animation: tear-fall 0.6s linear infinite;
+        }
+
+        .tear.left { left: 30%; top: 35%; animation-delay: 0s; }
+        .tear.right { left: 62%; top: 35%; animation-delay: 0.3s; }
+
+        @keyframes tear-fall {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(40px); opacity: 0; }
         }
 
         @keyframes attack-left {
@@ -865,6 +963,12 @@
             margin-bottom: 30px;
         }
 
+        /* Pulse animation for waiting */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
         /* INSTRUCTIONS SCREEN */
         .instructions {
             background: rgba(0, 0, 0, 0.95);
@@ -1015,8 +1119,21 @@
         <div class="screen" id="menuScreen">
             <div class="title">MATH FIGHTER</div>
             <div class="subtitle">by ALGONOVA</div>
-            <button class="menu-btn" onclick="showCharacterSelect()">⚔️ ИГРАТЬ</button>
+            <button class="menu-btn" onclick="showCharacterSelect('solo')">⚔️ ИГРАТЬ</button>
+            <button class="menu-btn" onclick="showCharacterSelect('multi')" style="background: linear-gradient(to bottom, #e91e63, #c2185b); border-color: #f48fb1;">👥 ИГРАТЬ С ДРУГОМ</button>
             <button class="menu-btn" onclick="showLeaderboard()">🏆 ЛИДЕРБОРД</button>
+        </div>
+
+        <!-- WAITING ROOM SCREEN -->
+        <div class="screen hidden" id="waitingScreen">
+            <div class="title" style="font-size: 18px;">⏳ ОЖИДАНИЕ ИГРОКА</div>
+            <div style="margin: 20px 0; padding: 20px; background: #1a1a2a; border-radius: 8px; border: 2px solid #9c27b0;">
+                <div style="font-size: 10px; color: #888; margin-bottom: 10px;">Отправь ссылку другу:</div>
+                <div id="roomLink" style="font-size: 9px; color: #b388ff; word-break: break-all; margin-bottom: 15px; padding: 10px; background: #0a0a0f; border-radius: 4px;"></div>
+                <button class="menu-btn" onclick="copyRoomLink()" style="font-size: 10px; padding: 10px 20px;">📋 КОПИРОВАТЬ</button>
+            </div>
+            <div style="font-size: 10px; color: #888; animation: pulse 2s infinite;">Ожидание соперника...</div>
+            <button class="menu-btn" onclick="showMenu()" style="margin-top: 20px; background: #555; border-color: #777;">← ОТМЕНА</button>
         </div>
 
         <!-- CHARACTER SELECT SCREEN -->
@@ -1092,8 +1209,28 @@
     </div>
 
     <script>
+        // FIREBASE CONFIG
+        const firebaseConfig = {
+            apiKey: "AIzaSyAADPvAgtg5YjGyj6DykBHEZ9O0CqagtyM",
+            authDomain: "math-fighter-9c354.firebaseapp.com",
+            databaseURL: "https://math-fighter-9c354-default-rtdb.firebaseio.com",
+            projectId: "math-fighter-9c354",
+            storageBucket: "math-fighter-9c354.firebasestorage.app",
+            messagingSenderId: "97829895286",
+            appId: "1:97829895286:web:9e5a53b1ef8d4f521f3357"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         // GAME STATE
         let gameState = {
+            mode: 'solo', // 'solo' or 'multi'
+            roomId: null,
+            isHost: false,
+            roomRef: null,
+            playerId: null,
             player1: {
                 character: null,
                 health: 3,
@@ -1272,13 +1409,247 @@
 
         function showInstructions() {
             if (!gameState.player1.character) return;
-            hideAllScreens();
-            document.getElementById('instructionsScreen').classList.remove('hidden');
+
+            if (gameState.mode === 'multi') {
+                if (gameState.isHost) {
+                    // Host creates room, show waiting screen
+                    showWaitingRoom();
+                } else {
+                    // Guest joining - join the room directly
+                    joinRoom();
+                }
+            } else {
+                // Solo mode - show instructions
+                hideAllScreens();
+                document.getElementById('instructionsScreen').classList.remove('hidden');
+            }
         }
 
-        function showCharacterSelect() {
+        function showCharacterSelect(mode = 'solo') {
+            gameState.mode = mode;
             hideAllScreens();
             document.getElementById('charSelectScreen').classList.remove('hidden');
+
+            // Update button text based on mode
+            const startBtn = document.getElementById('startBtn');
+            if (mode === 'multi') {
+                startBtn.textContent = '👥 СОЗДАТЬ КОМНАТУ';
+            } else {
+                startBtn.textContent = 'НАЧАТЬ БОЙ';
+            }
+        }
+
+        function showWaitingRoom() {
+            hideAllScreens();
+
+            // Generate room ID
+            gameState.roomId = generateRoomId();
+            gameState.isHost = true;
+            gameState.playerId = 'player1';
+
+            // Show room link
+            const roomLink = `${window.location.origin}${window.location.pathname}?room=${gameState.roomId}`;
+            document.getElementById('roomLink').textContent = roomLink;
+
+            document.getElementById('waitingScreen').classList.remove('hidden');
+
+            // Create room in Firebase
+            gameState.roomRef = database.ref('rooms/' + gameState.roomId);
+            gameState.roomRef.set({
+                host: {
+                    character: gameState.player1.character,
+                    health: 3,
+                    ready: true
+                },
+                guest: null,
+                problems: null,
+                status: 'waiting',
+                createdAt: firebase.database.ServerValue.TIMESTAMP
+            });
+
+            // Listen for guest joining
+            gameState.roomRef.child('guest').on('value', (snapshot) => {
+                const guest = snapshot.val();
+                if (guest && guest.ready) {
+                    // Guest joined! Start the game
+                    gameState.player2.character = guest.character;
+                    gameState.player2.isAI = false;
+
+                    // Generate problems and sync
+                    gameState.problems = generateProblems(5);
+                    gameState.roomRef.child('problems').set(gameState.problems);
+                    gameState.roomRef.child('status').set('playing');
+
+                    // Start game for host
+                    startMultiplayerGame();
+                }
+            });
+
+            // Clean up room on disconnect
+            gameState.roomRef.onDisconnect().remove();
+        }
+
+        function generateRoomId() {
+            return Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+
+        function copyRoomLink() {
+            const roomLink = document.getElementById('roomLink').textContent;
+            navigator.clipboard.writeText(roomLink).then(() => {
+                alert('✅ Ссылка скопирована!');
+            }).catch(() => {
+                // Fallback
+                prompt('Скопируй ссылку:', roomLink);
+            });
+        }
+
+        // Check if joining a room
+        function checkRoomJoin() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const roomId = urlParams.get('room');
+
+            if (roomId) {
+                gameState.roomId = roomId;
+                gameState.isHost = false;
+                gameState.mode = 'multi';
+                gameState.playerId = 'player2';
+
+                // Check if room exists
+                database.ref('rooms/' + roomId).once('value', (snapshot) => {
+                    if (snapshot.exists() && snapshot.val().status === 'waiting') {
+                        alert(`🎮 Присоединяешься к комнате: ${roomId}\n\nВыбери персонажа!`);
+                        showCharacterSelect('multi');
+                    } else {
+                        alert('❌ Комната не найдена или игра уже началась');
+                        showMenu();
+                    }
+                });
+            }
+        }
+
+        // Join room as guest
+        function joinRoom() {
+            gameState.roomRef = database.ref('rooms/' + gameState.roomId);
+
+            // Set guest data
+            gameState.roomRef.child('guest').set({
+                character: gameState.player1.character,
+                health: 3,
+                ready: true
+            });
+
+            // Listen for game start
+            gameState.roomRef.child('status').on('value', (snapshot) => {
+                if (snapshot.val() === 'playing') {
+                    // Get host character
+                    gameState.roomRef.child('host').once('value', (hostSnap) => {
+                        gameState.player2.character = hostSnap.val().character;
+                        gameState.player2.isAI = false;
+                    });
+
+                    // Get problems
+                    gameState.roomRef.child('problems').once('value', (probSnap) => {
+                        gameState.problems = probSnap.val();
+                        startMultiplayerGame();
+                    });
+                }
+            });
+
+            // Show waiting message
+            hideAllScreens();
+            document.getElementById('waitingScreen').classList.remove('hidden');
+            document.getElementById('roomLink').textContent = 'Ожидание начала игры...';
+        }
+
+        // Start multiplayer game
+        function startMultiplayerGame() {
+            hideAllScreens();
+
+            // Reset health
+            gameState.player1.health = 3;
+            gameState.player2.health = 3;
+            gameState.player1.correctAnswers = 0;
+            gameState.gameActive = false;
+
+            // Setup UI
+            setupMultiplayerUI();
+
+            // Start countdown
+            startCountdown();
+
+            // Setup Firebase listeners for real-time sync
+            setupMultiplayerListeners();
+        }
+
+        function setupMultiplayerUI() {
+            const p1Char = characters[gameState.player1.character];
+            const p2Char = characters[gameState.player2.character];
+
+            if (gameState.isHost) {
+                // Host is on left, guest on right
+                document.getElementById('player1Char').innerHTML = `<div class="${p1Char.sprite}"></div>`;
+                document.getElementById('player2Char').innerHTML = `<div class="${p2Char.sprite}"></div>`;
+                document.getElementById('player1Name').textContent = p1Char.name + ' (ТЫ)';
+                document.getElementById('player2Name').textContent = p2Char.name;
+            } else {
+                // Guest sees themselves on left, host on right
+                document.getElementById('player1Char').innerHTML = `<div class="${p1Char.sprite}"></div>`;
+                document.getElementById('player2Char').innerHTML = `<div class="${p2Char.sprite}"></div>`;
+                document.getElementById('player1Name').textContent = p1Char.name + ' (ТЫ)';
+                document.getElementById('player2Name').textContent = p2Char.name;
+            }
+
+            updateHealthDisplay();
+            renderProblems();
+
+            document.getElementById('healthContainer').style.display = 'flex';
+            document.getElementById('charactersArea').style.display = 'flex';
+        }
+
+        function setupMultiplayerListeners() {
+            const playerPath = gameState.isHost ? 'host' : 'guest';
+            const opponentPath = gameState.isHost ? 'guest' : 'host';
+
+            // Listen for opponent's health changes
+            gameState.roomRef.child(opponentPath + '/health').on('value', (snapshot) => {
+                const health = snapshot.val();
+                if (health !== null) {
+                    gameState.player2.health = health;
+                    updateHealthDisplay();
+
+                    // Check win condition
+                    if (health <= 0 && gameState.gameActive) {
+                        gameState.gameActive = false;
+                        showEndAnimation('player1');
+                        setTimeout(() => showResult(true), 2000);
+                    }
+                }
+            });
+
+            // Listen for problems being solved
+            gameState.roomRef.child('problems').on('value', (snapshot) => {
+                const problems = snapshot.val();
+                if (problems) {
+                    gameState.problems = problems;
+                    renderProblems();
+                }
+            });
+        }
+
+        // Sync answer to Firebase
+        function syncAnswer(index, correct) {
+            if (gameState.mode !== 'multi') return;
+
+            const playerPath = gameState.isHost ? 'host' : 'guest';
+
+            // Update health
+            gameState.roomRef.child(playerPath + '/health').set(gameState.player1.health);
+
+            // Mark problem as solved
+            if (correct) {
+                gameState.roomRef.child('problems/' + index + '/solved').set(true);
+                gameState.roomRef.child('problems/' + index + '/solvedBy').set(gameState.playerId);
+            }
         }
 
         function showLeaderboard() {
@@ -1615,9 +1986,17 @@
                 gameState.problems[index].solvedBy = 'player';
                 gameState.player1.correctAnswers++;
 
+                // In multiplayer, opponent takes damage
+                if (gameState.mode === 'multi') {
+                    // Sync to Firebase - opponent will see their health decrease
+                    syncAnswer(index, true);
+                } else {
+                    // Solo mode - AI takes damage
+                    gameState.player2.health--;
+                }
+
                 // Attack enemy
                 fireProjectile('left', gameState.player1.character);
-                gameState.player2.health--;
 
                 setTimeout(() => {
                     document.getElementById('player2Char').classList.add('hurt');
@@ -1639,6 +2018,11 @@
                 // Self damage
                 showExplosion('left');
                 gameState.player1.health--;
+
+                // Sync to Firebase in multiplayer
+                if (gameState.mode === 'multi') {
+                    syncAnswer(index, false);
+                }
 
                 document.getElementById('player1Char').classList.add('hurt');
                 setTimeout(() => {
@@ -1702,13 +2086,68 @@
         function checkGameEnd() {
             if (gameState.player1.health <= 0) {
                 gameState.gameActive = false;
-                document.getElementById('player1Char').classList.add('lose');
-                setTimeout(() => showResult(false), 1000);
+                showEndAnimation('player2'); // AI wins
+                setTimeout(() => showResult(false), 10000); // 10 sec animation
             } else if (gameState.player2.health <= 0) {
                 gameState.gameActive = false;
-                document.getElementById('player2Char').classList.add('lose');
-                setTimeout(() => showResult(true), 1000);
+                showEndAnimation('player1'); // Player wins
+                setTimeout(() => showResult(true), 10000); // 10 sec animation
             }
+        }
+
+        function showEndAnimation(winner) {
+            const p1Char = document.getElementById('player1Char');
+            const p2Char = document.getElementById('player2Char');
+            const p1Character = gameState.player1.character;
+            const p2Character = gameState.player2.character;
+
+            if (winner === 'player1') {
+                // Player 1 wins - show fireworks
+                p1Char.classList.add('win');
+                addFireworks(p1Char);
+
+                // Player 2 loses - show lose animation
+                p2Char.classList.add('lose', `${p2Character}-lose`);
+                if (p2Character === 'panda') {
+                    addTears(p2Char);
+                }
+            } else {
+                // Player 2 (AI) wins
+                p2Char.classList.add('win');
+                addFireworks(p2Char);
+
+                // Player 1 loses
+                p1Char.classList.add('lose', `${p1Character}-lose`);
+                if (p1Character === 'panda') {
+                    addTears(p1Char);
+                }
+            }
+        }
+
+        function addFireworks(element) {
+            const fireworks = document.createElement('div');
+            fireworks.className = 'fireworks';
+            fireworks.innerHTML = `
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+                <div class="firework"></div>
+            `;
+            element.appendChild(fireworks);
+        }
+
+        function addTears(element) {
+            const tears = document.createElement('div');
+            tears.className = 'tears';
+            tears.innerHTML = `
+                <div class="tear left"></div>
+                <div class="tear right"></div>
+            `;
+            element.appendChild(tears);
         }
 
         // LEADERBOARD
@@ -1746,7 +2185,10 @@
         }
 
         // Initialize
-        showMenu();
+        checkRoomJoin();
+        if (!gameState.roomId) {
+            showMenu();
+        }
     </script>
 </body>
 </html>
