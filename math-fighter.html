@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Fighter - Algonova</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #0a0a0f;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Press Start 2P', cursive;
+            overflow: hidden;
+        }
+
+        .game-container {
+            width: 900px;
+            height: 600px;
+            position: relative;
+            border: 4px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 50px rgba(138, 43, 226, 0.3);
+        }
+
+        /* PIXEL ART CITY BACKGROUND */
+        .arena-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom,
+                #1a0a2e 0%,
+                #2d1b4e 20%,
+                #4a1f6e 40%,
+                #1a1a3a 60%,
+                #0f0f1a 100%
+            );
+        }
+
+        /* Stars */
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 40%;
+            background-image:
+                radial-gradient(1px 1px at 100px 50px, white, transparent),
+                radial-gradient(1px 1px at 200px 80px, white, transparent),
+                radial-gradient(2px 2px at 300px 30px, #fff8, transparent),
+                radial-gradient(1px 1px at 400px 60px, white, transparent),
+                radial-gradient(1px 1px at 500px 40px, white, transparent),
+                radial-gradient(2px 2px at 600px 70px, #fff8, transparent),
+                radial-gradient(1px 1px at 700px 20px, white, transparent),
+                radial-gradient(1px 1px at 150px 90px, white, transparent),
+                radial-gradient(1px 1px at 350px 100px, white, transparent),
+                radial-gradient(1px 1px at 550px 85px, white, transparent),
+                radial-gradient(1px 1px at 750px 95px, white, transparent),
+                radial-gradient(1px 1px at 50px 70px, white, transparent),
+                radial-gradient(1px 1px at 850px 55px, white, transparent);
+        }
+
+        /* City skyline - back layer */
+        .city-back {
+            position: absolute;
+            bottom: 180px;
+            width: 100%;
+            height: 200px;
+        }
+
+        .building-back {
+            position: absolute;
+            bottom: 0;
+            background: #1a1a2e;
+        }
+
+        .b1 { left: 0; width: 80px; height: 120px; }
+        .b2 { left: 70px; width: 60px; height: 160px; }
+        .b3 { left: 120px; width: 100px; height: 140px; }
+        .b4 { left: 210px; width: 70px; height: 180px; }
+        .b5 { left: 270px; width: 90px; height: 130px; }
+        .b6 { left: 350px; width: 80px; height: 170px; }
+        .b7 { left: 420px; width: 110px; height: 150px; }
+        .b8 { left: 520px; width: 70px; height: 190px; }
+        .b9 { left: 580px; width: 90px; height: 140px; }
+        .b10 { left: 660px; width: 80px; height: 160px; }
+        .b11 { left: 730px; width: 100px; height: 175px; }
+        .b12 { left: 820px; width: 80px; height: 145px; }
+
+        /* Windows on back buildings */
+        .building-back::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 5px;
+            right: 5px;
+            bottom: 10px;
+            background-image:
+                linear-gradient(90deg, #ffeb3b33 2px, transparent 2px),
+                linear-gradient(#ffeb3b33 2px, transparent 2px);
+            background-size: 12px 15px;
+        }
+
+        /* City skyline - front layer */
+        .city-front {
+            position: absolute;
+            bottom: 150px;
+            width: 100%;
+            height: 180px;
+        }
+
+        .building-front {
+            position: absolute;
+            bottom: 0;
+            background: #12121f;
+        }
+
+        .bf1 { left: -20px; width: 100px; height: 100px; }
+        .bf2 { left: 60px; width: 80px; height: 130px; }
+        .bf3 { left: 150px; width: 70px; height: 90px; }
+        .bf4 { left: 230px; width: 90px; height: 110px; }
+        .bf5 { left: 340px; width: 60px; height: 85px; }
+        .bf6 { left: 450px; width: 100px; height: 120px; }
+        .bf7 { left: 560px; width: 75px; height: 95px; }
+        .bf8 { left: 650px; width: 85px; height: 115px; }
+        .bf9 { left: 750px; width: 70px; height: 80px; }
+        .bf10 { left: 830px; width: 90px; height: 105px; }
+
+        /* Neon ALGONOVA sign */
+        .neon-sign {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 14px;
+            color: #b388ff;
+            text-shadow:
+                0 0 5px #b388ff,
+                0 0 10px #b388ff,
+                0 0 20px #b388ff,
+                0 0 40px #9c27b0,
+                0 0 80px #9c27b0;
+            animation: neon-flicker 3s infinite alternate;
+            z-index: 5;
+            letter-spacing: 4px;
+        }
+
+        @keyframes neon-flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                text-shadow:
+                    0 0 5px #b388ff,
+                    0 0 10px #b388ff,
+                    0 0 20px #b388ff,
+                    0 0 40px #9c27b0,
+                    0 0 80px #9c27b0;
+                opacity: 1;
+            }
+            20%, 24%, 55% {
+                text-shadow: none;
+                opacity: 0.8;
+            }
+        }
+
+        /* Building with sign */
+        .sign-building {
+            position: absolute;
+            bottom: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 180px;
+            height: 200px;
+            background: linear-gradient(to bottom, #2a2a4a, #1a1a2e);
+            z-index: 4;
+        }
+
+        .sign-building::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background-image:
+                linear-gradient(90deg, #4fc3f755 3px, transparent 3px),
+                linear-gradient(#4fc3f755 3px, transparent 3px);
+            background-size: 18px 20px;
+        }
+
+        /* Ground/Platform */
+        .ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, #1a1a2a 0%, #0f0f15 100%);
+        }
+
+        .ground::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, #333, #555, #333);
+        }
+
+        /* Ground tiles */
+        .ground-tiles {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 150px;
+            background-image:
+                linear-gradient(90deg, #ffffff08 1px, transparent 1px),
+                linear-gradient(#ffffff08 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* HEALTH BARS */
+        .health-container {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 100;
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .player-info.right {
+            align-items: flex-end;
+        }
+
+        .player-name {
+            font-size: 10px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+        }
+
+        .health-bar {
+            width: 200px;
+            height: 20px;
+            background: #333;
+            border: 3px solid #555;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .health-fill {
+            height: 100%;
+            background: linear-gradient(to bottom, #4caf50, #2e7d32);
+            transition: width 0.3s ease;
+        }
+
+        .health-fill.low {
+            background: linear-gradient(to bottom, #f44336, #c62828);
+        }
+
+        .health-fill.medium {
+            background: linear-gradient(to bottom, #ff9800, #f57c00);
+        }
+
+        .hearts {
+            display: flex;
+            gap: 5px;
+            margin-top: 5px;
+        }
+
+        .heart {
+            width: 20px;
+            height: 20px;
+            font-size: 16px;
+            filter: drop-shadow(1px 1px 0 #000);
+        }
+
+        /* VS text */
+        .vs-text {
+            position: absolute;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 16px;
+            color: #ffeb3b;
+            text-shadow: 2px 2px 0 #000, 0 0 10px #ff9800;
+            z-index: 100;
+        }
+
+        /* GAME TIMER */
+        .game-timer {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 5px 15px;
+            border-radius: 8px;
+            border: 2px solid #9c27b0;
+        }
+
+        .game-timer.warning {
+            color: #ff9800;
+            animation: timer-pulse 0.5s infinite alternate;
+        }
+
+        .game-timer.critical {
+            color: #f44336;
+            animation: timer-pulse 0.3s infinite alternate;
+        }
+
+        @keyframes timer-pulse {
+            from { transform: translateX(-50%) scale(1); }
+            to { transform: translateX(-50%) scale(1.1); }
+        }
+
+        /* CHARACTER SPRITES */
+        .characters-area {
+            position: absolute;
+            bottom: 150px;
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding: 0 50px;
+            z-index: 50;
+        }
+
+        .character {
+            position: relative;
+            width: 120px;
+            height: 160px;
+            image-rendering: pixelated;
+            transition: transform 0.1s;
+        }
+
+        .character.attack {
+            animation: attack-left 0.3s ease-out;
+        }
+
+        .character.right.attack {
+            animation: attack-right 0.3s ease-out;
+        }
+
+        .character.hurt {
+            animation: hurt 0.3s ease-out;
+        }
+
+        .character.lose {
+            filter: grayscale(50%);
+        }
+
+        @keyframes attack-left {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(30px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes attack-right {
+            0% { transform: translateX(0); }
+            50% { transform: translateX(-30px); }
+            100% { transform: translateX(0); }
+        }
+
+        @keyframes hurt {
+            0%, 100% { transform: translateX(0); filter: brightness(1); }
+            25% { transform: translateX(-10px); filter: brightness(2); }
+            75% { transform: translateX(10px); filter: brightness(0.5); }
+        }
+
+        /* Pixel art character - Panda Girl */
+        .panda-sprite {
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48"><rect x="10" y="2" width="12" height="4" fill="%23222"/><rect x="8" y="4" width="4" height="4" fill="%23222"/><rect x="20" y="4" width="4" height="4" fill="%23222"/><rect x="8" y="6" width="16" height="12" fill="%23fce4ec"/><rect x="10" y="8" width="3" height="3" fill="%23222"/><rect x="19" y="8" width="3" height="3" fill="%23222"/><rect x="11" y="9" width="1" height="1" fill="%23fff"/><rect x="20" y="9" width="1" height="1" fill="%23fff"/><rect x="14" y="12" width="4" height="2" fill="%23222"/><rect x="15" y="14" width="2" height="1" fill="%23e91e63"/><rect x="6" y="18" width="20" height="16" fill="%23fff"/><rect x="8" y="20" width="6" height="6" fill="%23222"/><rect x="18" y="20" width="6" height="6" fill="%23222"/><rect x="12" y="28" width="8" height="4" fill="%23ffcccc"/><rect x="4" y="20" width="4" height="10" fill="%23fff"/><rect x="24" y="20" width="4" height="10" fill="%23fff"/><rect x="2" y="28" width="6" height="6" fill="%23222"/><rect x="24" y="28" width="6" height="6" fill="%23222"/><rect x="10" y="34" width="5" height="10" fill="%23fff"/><rect x="17" y="34" width="5" height="10" fill="%23fff"/><rect x="8" y="44" width="7" height="4" fill="%23222"/><rect x="17" y="44" width="7" height="4" fill="%23222"/></svg>') center/contain no-repeat;
+        }
+
+        /* Pixel art character - Satoru */
+        .satoru-sprite {
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48"><rect x="10" y="0" width="12" height="8" fill="%23fff"/><rect x="8" y="2" width="16" height="6" fill="%23fff"/><rect x="6" y="8" width="20" height="4" fill="%23222"/><rect x="8" y="12" width="16" height="6" fill="%23fce4ec"/><rect x="12" y="14" width="2" height="2" fill="%2303a9f4"/><rect x="18" y="14" width="2" height="2" fill="%2303a9f4"/><rect x="14" y="16" width="4" height="1" fill="%23e0e0e0"/><rect x="6" y="18" width="20" height="14" fill="%231a237e"/><rect x="10" y="20" width="12" height="2" fill="%23fff"/><rect x="4" y="20" width="4" height="10" fill="%231a237e"/><rect x="24" y="20" width="4" height="10" fill="%231a237e"/><rect x="2" y="28" width="6" height="4" fill="%23fce4ec"/><rect x="24" y="28" width="6" height="4" fill="%23fce4ec"/><rect x="10" y="32" width="5" height="12" fill="%23222"/><rect x="17" y="32" width="5" height="12" fill="%23222"/><rect x="8" y="44" width="7" height="4" fill="%23222"/><rect x="17" y="44" width="7" height="4" fill="%23222"/><rect x="0" y="18" width="32" height="2" fill="%2303a9f466"/><rect x="0" y="22" width="32" height="1" fill="%2303a9f433"/></svg>') center/contain no-repeat;
+        }
+
+        /* Pixel art character - Blaze */
+        .blaze-sprite {
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 48"><rect x="10" y="0" width="12" height="6" fill="%23ff5722"/><rect x="8" y="2" width="4" height="6" fill="%23ff5722"/><rect x="20" y="2" width="4" height="6" fill="%23ff5722"/><rect x="6" y="4" width="4" height="4" fill="%23ff8a65"/><rect x="22" y="4" width="4" height="4" fill="%23ff8a65"/><rect x="4" y="6" width="6" height="6" fill="%23333"/><rect x="22" y="6" width="6" height="6" fill="%23333"/><rect x="8" y="8" width="16" height="10" fill="%23fce4ec"/><rect x="10" y="10" width="3" height="3" fill="%23222"/><rect x="19" y="10" width="3" height="3" fill="%23222"/><rect x="11" y="11" width="1" height="1" fill="%23fff"/><rect x="20" y="11" width="1" height="1" fill="%23fff"/><rect x="14" y="14" width="4" height="2" fill="%23e0e0e0"/><rect x="6" y="18" width="20" height="14" fill="%23212121"/><rect x="8" y="20" width="4" height="8" fill="%23ff5722"/><rect x="20" y="20" width="4" height="8" fill="%23ff5722"/><rect x="4" y="20" width="4" height="10" fill="%23212121"/><rect x="24" y="20" width="4" height="10" fill="%23212121"/><rect x="2" y="28" width="6" height="4" fill="%23fce4ec"/><rect x="24" y="28" width="6" height="4" fill="%23fce4ec"/><rect x="10" y="32" width="5" height="12" fill="%23424242"/><rect x="17" y="32" width="5" height="12" fill="%23424242"/><rect x="8" y="44" width="7" height="4" fill="%23d32f2f"/><rect x="17" y="44" width="7" height="4" fill="%23d32f2f"/></svg>') center/contain no-repeat;
+        }
+
+        /* PROJECTILES */
+        .projectile {
+            position: absolute;
+            z-index: 60;
+            pointer-events: none;
+        }
+
+        .projectile-panda {
+            width: 40px;
+            height: 40px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><rect x="4" y="2" width="8" height="4" fill="%23222"/><rect x="2" y="4" width="4" height="4" fill="%23222"/><rect x="10" y="4" width="4" height="4" fill="%23222"/><rect x="2" y="6" width="12" height="8" fill="%23fff"/><rect x="4" y="8" width="3" height="3" fill="%23222"/><rect x="9" y="8" width="3" height="3" fill="%23222"/><rect x="6" y="12" width="4" height="2" fill="%23ffcccc"/></svg>') center/contain no-repeat;
+            animation: spin 0.5s linear infinite;
+        }
+
+        .projectile-satoru {
+            width: 60px;
+            height: 30px;
+            background: linear-gradient(90deg, transparent, #03a9f4, #fff, #03a9f4, transparent);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #03a9f4, 0 0 40px #03a9f4;
+        }
+
+        .projectile-blaze {
+            width: 40px;
+            height: 40px;
+            background: radial-gradient(circle, #ffeb3b 0%, #ff9800 40%, #f44336 70%, transparent 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #ff5722, 0 0 40px #ff5722;
+            animation: flicker 0.1s infinite alternate;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes flicker {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .projectile.moving-right {
+            animation: fly-right 0.4s ease-out forwards;
+        }
+
+        .projectile.moving-left {
+            animation: fly-left 0.4s ease-out forwards;
+        }
+
+        @keyframes fly-right {
+            from { left: 150px; opacity: 1; }
+            to { left: 650px; opacity: 0; }
+        }
+
+        @keyframes fly-left {
+            from { right: 150px; opacity: 1; }
+            to { right: 650px; opacity: 0; }
+        }
+
+        /* EXPLOSION for wrong answer */
+        .explosion {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle, #fff 0%, #ffeb3b 20%, #ff5722 50%, transparent 70%);
+            border-radius: 50%;
+            animation: explode 0.4s ease-out forwards;
+            z-index: 70;
+        }
+
+        @keyframes explode {
+            0% { transform: scale(0); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 1; }
+            100% { transform: scale(2); opacity: 0; }
+        }
+
+        /* MATH PROBLEMS AREA */
+        .problems-area {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px solid #9c27b0;
+            border-radius: 8px;
+            padding: 15px;
+            z-index: 100;
+            box-shadow: 0 0 20px rgba(156, 39, 176, 0.5);
+        }
+
+        .problem-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 8px 0;
+        }
+
+        .problem-text {
+            font-size: 14px;
+            color: #fff;
+            min-width: 150px;
+        }
+
+        .problem-input {
+            width: 80px;
+            height: 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            text-align: center;
+            background: #1a1a2a;
+            border: 2px solid #666;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        .problem-input:focus {
+            border-color: #9c27b0;
+            outline: none;
+            box-shadow: 0 0 10px rgba(156, 39, 176, 0.5);
+        }
+
+        .problem-input.correct {
+            border-color: #4caf50;
+            background: #1b5e20;
+        }
+
+        .problem-input.wrong {
+            border-color: #f44336;
+            background: #b71c1c;
+        }
+
+        .submit-btn {
+            width: 30px;
+            height: 30px;
+            font-size: 16px;
+            background: #4caf50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .submit-btn:hover {
+            background: #66bb6a;
+            transform: scale(1.1);
+        }
+
+        .submit-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        /* COUNTDOWN */
+        .countdown {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: #ffeb3b;
+            text-shadow: 4px 4px 0 #000, 0 0 30px #ff9800;
+            z-index: 200;
+            animation: countdown-pop 0.5s ease-out;
+        }
+
+        @keyframes countdown-pop {
+            0% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+            50% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* GAME SCREENS */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 300;
+        }
+
+        .screen.hidden {
+            display: none;
+        }
+
+        .title {
+            font-size: 32px;
+            color: #b388ff;
+            text-shadow: 0 0 20px #9c27b0;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 12px;
+            color: #fff;
+            margin-bottom: 40px;
+        }
+
+        .menu-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+            padding: 15px 30px;
+            margin: 10px;
+            background: linear-gradient(to bottom, #9c27b0, #7b1fa2);
+            border: 3px solid #ce93d8;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .menu-btn:hover {
+            background: linear-gradient(to bottom, #ab47bc, #8e24aa);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(156, 39, 176, 0.5);
+        }
+
+        /* CHARACTER SELECT */
+        .character-select {
+            display: flex;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .char-card {
+            width: 150px;
+            padding: 20px;
+            background: #1a1a2a;
+            border: 3px solid #555;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .char-card:hover {
+            border-color: #9c27b0;
+            transform: translateY(-10px);
+            box-shadow: 0 10px 30px rgba(156, 39, 176, 0.3);
+        }
+
+        .char-card.selected {
+            border-color: #ffeb3b;
+            box-shadow: 0 0 30px rgba(255, 235, 59, 0.5);
+        }
+
+        .char-preview {
+            width: 80px;
+            height: 100px;
+            margin: 0 auto 15px;
+        }
+
+        .char-name {
+            font-size: 10px;
+            color: #fff;
+        }
+
+        /* WIN/LOSE SCREEN */
+        .result-text {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .result-text.win {
+            color: #4caf50;
+            text-shadow: 0 0 30px #4caf50;
+        }
+
+        .result-text.lose {
+            color: #f44336;
+            text-shadow: 0 0 30px #f44336;
+        }
+
+        .result-stats {
+            font-size: 12px;
+            color: #fff;
+            margin-bottom: 30px;
+        }
+
+        /* Level indicator */
+        .level-badge {
+            font-size: 8px;
+            color: #ffeb3b;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container" id="game">
+        <!-- BACKGROUND -->
+        <div class="arena-bg">
+            <div class="stars"></div>
+
+            <!-- City Back Layer -->
+            <div class="city-back">
+                <div class="building-back b1"></div>
+                <div class="building-back b2"></div>
+                <div class="building-back b3"></div>
+                <div class="building-back b4"></div>
+                <div class="building-back b5"></div>
+                <div class="building-back b6"></div>
+                <div class="building-back b7"></div>
+                <div class="building-back b8"></div>
+                <div class="building-back b9"></div>
+                <div class="building-back b10"></div>
+                <div class="building-back b11"></div>
+                <div class="building-back b12"></div>
+            </div>
+
+            <!-- Building with Neon Sign -->
+            <div class="sign-building"></div>
+            <div class="neon-sign">ALGONOVA</div>
+
+            <!-- City Front Layer -->
+            <div class="city-front">
+                <div class="building-front bf1"></div>
+                <div class="building-front bf2"></div>
+                <div class="building-front bf3"></div>
+                <div class="building-front bf4"></div>
+                <div class="building-front bf5"></div>
+                <div class="building-front bf6"></div>
+                <div class="building-front bf7"></div>
+                <div class="building-front bf8"></div>
+                <div class="building-front bf9"></div>
+                <div class="building-front bf10"></div>
+            </div>
+
+            <!-- Ground -->
+            <div class="ground">
+                <div class="ground-tiles"></div>
+            </div>
+        </div>
+
+        <!-- HEALTH BARS -->
+        <div class="health-container" id="healthContainer" style="display: none;">
+            <div class="player-info">
+                <div class="player-name" id="player1Name">PLAYER</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="player1Health" style="width: 100%"></div>
+                </div>
+                <div class="hearts" id="player1Hearts">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+            </div>
+
+            <div class="vs-text">VS</div>
+            <div class="game-timer" id="gameTimer" style="display: none;">1:00</div>
+
+            <div class="player-info right">
+                <div class="player-name" id="player2Name">AI</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="player2Health" style="width: 100%"></div>
+                </div>
+                <div class="hearts" id="player2Hearts">
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                    <span class="heart">❤️</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHARACTERS -->
+        <div class="characters-area" id="charactersArea" style="display: none;">
+            <div class="character" id="player1Char">
+                <div class="panda-sprite"></div>
+            </div>
+            <div class="character right" id="player2Char">
+                <div class="satoru-sprite"></div>
+            </div>
+        </div>
+
+        <!-- PROJECTILES CONTAINER -->
+        <div id="projectilesContainer"></div>
+
+        <!-- MATH PROBLEMS -->
+        <div class="problems-area" id="problemsArea" style="display: none;">
+            <div id="problemsList"></div>
+        </div>
+
+        <!-- COUNTDOWN -->
+        <div class="countdown hidden" id="countdown"></div>
+
+        <!-- MAIN MENU SCREEN -->
+        <div class="screen" id="menuScreen">
+            <div class="title">MATH FIGHTER</div>
+            <div class="subtitle">by ALGONOVA</div>
+            <button class="menu-btn" onclick="showCharacterSelect()">⚔️ ИГРАТЬ</button>
+            <button class="menu-btn" onclick="showLeaderboard()">🏆 ЛИДЕРБОРД</button>
+        </div>
+
+        <!-- CHARACTER SELECT SCREEN -->
+        <div class="screen hidden" id="charSelectScreen">
+            <div class="title" style="font-size: 20px;">ВЫБЕРИ БОЙЦА</div>
+            <div class="character-select">
+                <div class="char-card" onclick="selectCharacter('panda')" id="card-panda">
+                    <div class="char-preview">
+                        <div class="panda-sprite"></div>
+                    </div>
+                    <div class="char-name">ПАНДА-ТЯН</div>
+                    <div class="level-badge">⭐ LVL 1</div>
+                </div>
+                <div class="char-card" onclick="selectCharacter('satoru')" id="card-satoru">
+                    <div class="char-preview">
+                        <div class="satoru-sprite"></div>
+                    </div>
+                    <div class="char-name">САТОРУ</div>
+                    <div class="level-badge">⭐ LVL 1</div>
+                </div>
+                <div class="char-card" onclick="selectCharacter('blaze')" id="card-blaze">
+                    <div class="char-preview">
+                        <div class="blaze-sprite"></div>
+                    </div>
+                    <div class="char-name">БЛЕЙЗ</div>
+                    <div class="level-badge">⭐ LVL 1</div>
+                </div>
+            </div>
+            <button class="menu-btn" onclick="startGame()" id="startBtn" disabled>НАЧАТЬ БОЙ</button>
+            <button class="menu-btn" onclick="showMenu()" style="background: #555; border-color: #777;">← НАЗАД</button>
+        </div>
+
+        <!-- RESULT SCREEN -->
+        <div class="screen hidden" id="resultScreen">
+            <div class="result-text" id="resultText">ПОБЕДА!</div>
+            <div class="result-stats" id="resultStats">Правильных ответов: 3/5</div>
+            <button class="menu-btn" onclick="startGame()">🔄 ЕЩЁ РАЗ</button>
+            <button class="menu-btn" onclick="showCharacterSelect()">👤 ВЫБРАТЬ БОЙЦА</button>
+            <button class="menu-btn" onclick="showMenu()" style="background: #555; border-color: #777;">🏠 МЕНЮ</button>
+        </div>
+
+        <!-- LEADERBOARD SCREEN -->
+        <div class="screen hidden" id="leaderboardScreen">
+            <div class="title" style="font-size: 20px;">🏆 ЛИДЕРБОРД</div>
+            <div id="leaderboardList" style="margin: 20px 0; max-height: 300px; overflow-y: auto;"></div>
+            <button class="menu-btn" onclick="showMenu()">← НАЗАД</button>
+        </div>
+    </div>
+
+    <script>
+        // GAME STATE
+        let gameState = {
+            player1: {
+                character: null,
+                health: 3,
+                level: 1,
+                wins: 0,
+                correctAnswers: 0
+            },
+            player2: {
+                character: 'satoru',
+                health: 3,
+                level: 1,
+                isAI: true
+            },
+            problems: [],
+            currentProblem: 0,
+            gameActive: false,
+            difficulty: 'normal',
+            timeLeft: 60,
+            timerInterval: null
+        };
+
+        // CHARACTERS DATA
+        const characters = {
+            panda: {
+                name: 'ПАНДА-ТЯН',
+                sprite: 'panda-sprite',
+                projectile: 'projectile-panda',
+                attack: '🐼'
+            },
+            satoru: {
+                name: 'САТОРУ',
+                sprite: 'satoru-sprite',
+                projectile: 'projectile-satoru',
+                attack: '⚡'
+            },
+            blaze: {
+                name: 'БЛЕЙЗ',
+                sprite: 'blaze-sprite',
+                projectile: 'projectile-blaze',
+                attack: '🔥'
+            }
+        };
+
+        // Generate math problems
+        function generateProblems(count = 5) {
+            const problems = [];
+            const operations = ['+', '-', '×', '÷'];
+
+            for (let i = 0; i < count; i++) {
+                let a, b, op, answer;
+                op = operations[Math.floor(Math.random() * operations.length)];
+
+                switch(op) {
+                    case '+':
+                        a = Math.floor(Math.random() * 50) + 1;
+                        b = Math.floor(Math.random() * 50) + 1;
+                        answer = a + b;
+                        break;
+                    case '-':
+                        a = Math.floor(Math.random() * 50) + 20;
+                        b = Math.floor(Math.random() * Math.min(a, 30)) + 1;
+                        answer = a - b;
+                        break;
+                    case '×':
+                        a = Math.floor(Math.random() * 12) + 1;
+                        b = Math.floor(Math.random() * 12) + 1;
+                        answer = a * b;
+                        break;
+                    case '÷':
+                        b = Math.floor(Math.random() * 10) + 2;
+                        answer = Math.floor(Math.random() * 10) + 1;
+                        a = b * answer;
+                        break;
+                }
+
+                problems.push({
+                    text: `${a} ${op} ${b} =`,
+                    answer: answer,
+                    solved: false,
+                    solvedBy: null
+                });
+            }
+
+            return problems;
+        }
+
+        // SCREEN NAVIGATION
+        function showMenu() {
+            hideAllScreens();
+            document.getElementById('menuScreen').classList.remove('hidden');
+        }
+
+        function showCharacterSelect() {
+            hideAllScreens();
+            document.getElementById('charSelectScreen').classList.remove('hidden');
+        }
+
+        function showLeaderboard() {
+            hideAllScreens();
+            document.getElementById('leaderboardScreen').classList.remove('hidden');
+            renderLeaderboard();
+        }
+
+        function showResult(won, reason = 'knockout') {
+            hideAllScreens();
+
+            // Clear timer
+            if (gameState.timerInterval) {
+                clearInterval(gameState.timerInterval);
+            }
+            document.getElementById('gameTimer').style.display = 'none';
+            document.getElementById('gameTimer').classList.remove('warning', 'critical');
+
+            const resultScreen = document.getElementById('resultScreen');
+            const resultText = document.getElementById('resultText');
+            const resultStats = document.getElementById('resultStats');
+
+            if (won) {
+                resultText.textContent = 'ПОБЕДА!';
+                resultText.className = 'result-text win';
+                gameState.player1.wins++;
+
+                // Check for level up
+                if (gameState.player1.wins >= 2 && gameState.player1.level === 1) {
+                    gameState.player1.level = 2;
+                    resultStats.textContent = `🎉 НОВЫЙ УРОВЕНЬ! LVL 2`;
+                } else if (gameState.player1.wins >= 5 && gameState.player1.level === 2) {
+                    gameState.player1.level = 3;
+                    resultStats.textContent = `🎉 МАКСИМАЛЬНЫЙ УРОВЕНЬ! LVL 3`;
+                } else {
+                    if (reason === 'timer') {
+                        resultStats.textContent = `⏱️ Время вышло! HP: ${gameState.player1.health} vs ${gameState.player2.health}`;
+                    } else if (reason === 'draw') {
+                        resultStats.textContent = `🤝 Ничья по HP, но ты решил больше!`;
+                    } else {
+                        resultStats.textContent = `Побед подряд: ${gameState.player1.wins}`;
+                    }
+                }
+
+                saveToLeaderboard();
+            } else {
+                resultText.textContent = 'ПОРАЖЕНИЕ';
+                resultText.className = 'result-text lose';
+                gameState.player1.wins = 0;
+
+                if (reason === 'timer') {
+                    resultStats.textContent = `⏱️ Время вышло! HP: ${gameState.player1.health} vs ${gameState.player2.health}`;
+                } else if (reason === 'draw') {
+                    resultStats.textContent = `🤝 Ничья! Реши больше примеров в следующий раз`;
+                } else {
+                    resultStats.textContent = 'Попробуй ещё раз!';
+                }
+            }
+
+            resultScreen.classList.remove('hidden');
+        }
+
+        function hideAllScreens() {
+            document.querySelectorAll('.screen').forEach(s => s.classList.add('hidden'));
+            document.getElementById('healthContainer').style.display = 'none';
+            document.getElementById('charactersArea').style.display = 'none';
+            document.getElementById('problemsArea').style.display = 'none';
+        }
+
+        // CHARACTER SELECT
+        function selectCharacter(char) {
+            gameState.player1.character = char;
+
+            document.querySelectorAll('.char-card').forEach(c => c.classList.remove('selected'));
+            document.getElementById(`card-${char}`).classList.add('selected');
+            document.getElementById('startBtn').disabled = false;
+        }
+
+        // START GAME
+        function startGame() {
+            if (!gameState.player1.character) return;
+
+            hideAllScreens();
+
+            // Reset game state
+            gameState.player1.health = 3;
+            gameState.player2.health = 3;
+            gameState.player1.correctAnswers = 0;
+            gameState.problems = generateProblems(5);
+            gameState.gameActive = false;
+
+            // Pick random AI character (different from player)
+            const aiChars = Object.keys(characters).filter(c => c !== gameState.player1.character);
+            gameState.player2.character = aiChars[Math.floor(Math.random() * aiChars.length)];
+
+            // Setup UI
+            setupGameUI();
+
+            // Start countdown
+            startCountdown();
+        }
+
+        function setupGameUI() {
+            const p1Char = characters[gameState.player1.character];
+            const p2Char = characters[gameState.player2.character];
+
+            // Set character sprites
+            document.getElementById('player1Char').innerHTML = `<div class="${p1Char.sprite}"></div>`;
+            document.getElementById('player2Char').innerHTML = `<div class="${p2Char.sprite}"></div>`;
+
+            // Set names
+            document.getElementById('player1Name').textContent = p1Char.name;
+            document.getElementById('player2Name').textContent = 'AI ' + p2Char.name;
+
+            // Reset health display
+            updateHealthDisplay();
+
+            // Generate problems UI
+            renderProblems();
+
+            // Show game elements
+            document.getElementById('healthContainer').style.display = 'flex';
+            document.getElementById('charactersArea').style.display = 'flex';
+        }
+
+        function updateHealthDisplay() {
+            // Player 1
+            const p1Health = document.getElementById('player1Health');
+            const p1Hearts = document.getElementById('player1Hearts');
+            const healthPercent1 = (gameState.player1.health / 3) * 100;
+            p1Health.style.width = healthPercent1 + '%';
+            p1Health.className = 'health-fill' + (healthPercent1 <= 33 ? ' low' : healthPercent1 <= 66 ? ' medium' : '');
+            p1Hearts.innerHTML = '❤️'.repeat(gameState.player1.health) + '🖤'.repeat(3 - gameState.player1.health);
+
+            // Player 2
+            const p2Health = document.getElementById('player2Health');
+            const p2Hearts = document.getElementById('player2Hearts');
+            const healthPercent2 = (gameState.player2.health / 3) * 100;
+            p2Health.style.width = healthPercent2 + '%';
+            p2Health.className = 'health-fill' + (healthPercent2 <= 33 ? ' low' : healthPercent2 <= 66 ? ' medium' : '');
+            p2Hearts.innerHTML = '❤️'.repeat(gameState.player2.health) + '🖤'.repeat(3 - gameState.player2.health);
+        }
+
+        function renderProblems() {
+            const list = document.getElementById('problemsList');
+            list.innerHTML = '';
+
+            gameState.problems.forEach((problem, index) => {
+                const row = document.createElement('div');
+                row.className = 'problem-row';
+                row.innerHTML = `
+                    <span class="problem-text">${problem.text}</span>
+                    <input type="text" class="problem-input" id="input-${index}"
+                           ${problem.solved ? 'disabled' : ''}
+                           onkeypress="handleKeyPress(event, ${index})">
+                    <button class="submit-btn" onclick="submitAnswer(${index})"
+                            ${problem.solved ? 'disabled' : ''}>✓</button>
+                `;
+                list.appendChild(row);
+            });
+        }
+
+        function startCountdown() {
+            const countdown = document.getElementById('countdown');
+            let count = 3;
+
+            countdown.classList.remove('hidden');
+            countdown.textContent = count;
+
+            const interval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdown.textContent = count;
+                    countdown.style.animation = 'none';
+                    countdown.offsetHeight; // Trigger reflow
+                    countdown.style.animation = 'countdown-pop 0.5s ease-out';
+                } else if (count === 0) {
+                    countdown.textContent = 'FIGHT!';
+                    countdown.style.color = '#f44336';
+                } else {
+                    countdown.classList.add('hidden');
+                    countdown.style.color = '#ffeb3b';
+                    clearInterval(interval);
+
+                    // Start the game
+                    document.getElementById('problemsArea').style.display = 'block';
+                    gameState.gameActive = true;
+
+                    // Focus first input
+                    document.getElementById('input-0').focus();
+
+                    // Start AI
+                    startAI();
+
+                    // Start timer
+                    startTimer();
+                }
+            }, 800);
+        }
+
+        // GAME TIMER
+        function startTimer() {
+            const timerEl = document.getElementById('gameTimer');
+            timerEl.style.display = 'block';
+            gameState.timeLeft = 60;
+            updateTimerDisplay();
+
+            gameState.timerInterval = setInterval(() => {
+                if (!gameState.gameActive) {
+                    clearInterval(gameState.timerInterval);
+                    return;
+                }
+
+                gameState.timeLeft--;
+                updateTimerDisplay();
+
+                // Warning at 15 seconds
+                if (gameState.timeLeft <= 15 && gameState.timeLeft > 5) {
+                    timerEl.classList.add('warning');
+                    timerEl.classList.remove('critical');
+                }
+                // Critical at 5 seconds
+                if (gameState.timeLeft <= 5) {
+                    timerEl.classList.remove('warning');
+                    timerEl.classList.add('critical');
+                }
+
+                // Time's up!
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    endGameByTimer();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const timerEl = document.getElementById('gameTimer');
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function endGameByTimer() {
+            gameState.gameActive = false;
+
+            // Determine winner by health
+            if (gameState.player1.health > gameState.player2.health) {
+                // Player wins
+                document.getElementById('player2Char').classList.add('lose');
+                setTimeout(() => showResult(true, 'timer'), 1000);
+            } else if (gameState.player2.health > gameState.player1.health) {
+                // AI wins
+                document.getElementById('player1Char').classList.add('lose');
+                setTimeout(() => showResult(false, 'timer'), 1000);
+            } else {
+                // Draw - player with more correct answers wins, or it's a tie
+                if (gameState.player1.correctAnswers > 0) {
+                    setTimeout(() => showResult(true, 'draw'), 1000);
+                } else {
+                    setTimeout(() => showResult(false, 'draw'), 1000);
+                }
+            }
+        }
+
+        // AI LOGIC
+        function startAI() {
+            const solveNext = () => {
+                if (!gameState.gameActive) return;
+
+                // Find unsolved problem
+                const unsolved = gameState.problems.findIndex(p => !p.solved);
+                if (unsolved === -1) return;
+
+                // AI delay based on difficulty (2-5 seconds)
+                const delay = 2000 + Math.random() * 3000;
+
+                setTimeout(() => {
+                    if (!gameState.gameActive) return;
+                    if (gameState.problems[unsolved].solved) {
+                        solveNext();
+                        return;
+                    }
+
+                    // AI solves correctly
+                    gameState.problems[unsolved].solved = true;
+                    gameState.problems[unsolved].solvedBy = 'ai';
+
+                    // AI attacks player
+                    fireProjectile('right', gameState.player2.character);
+                    gameState.player1.health--;
+
+                    setTimeout(() => {
+                        document.getElementById('player1Char').classList.add('hurt');
+                        setTimeout(() => {
+                            document.getElementById('player1Char').classList.remove('hurt');
+                        }, 300);
+                    }, 350);
+
+                    updateHealthDisplay();
+                    renderProblems();
+
+                    checkGameEnd();
+
+                    if (gameState.gameActive) {
+                        solveNext();
+                    }
+                }, delay);
+            };
+
+            solveNext();
+        }
+
+        // ANSWER SUBMISSION
+        function handleKeyPress(event, index) {
+            if (event.key === 'Enter') {
+                submitAnswer(index);
+            }
+        }
+
+        function submitAnswer(index) {
+            if (!gameState.gameActive) return;
+            if (gameState.problems[index].solved) return;
+
+            const input = document.getElementById(`input-${index}`);
+            const userAnswer = parseInt(input.value);
+            const correctAnswer = gameState.problems[index].answer;
+
+            if (isNaN(userAnswer)) return;
+
+            if (userAnswer === correctAnswer) {
+                // Correct!
+                input.classList.add('correct');
+                gameState.problems[index].solved = true;
+                gameState.problems[index].solvedBy = 'player';
+                gameState.player1.correctAnswers++;
+
+                // Attack enemy
+                fireProjectile('left', gameState.player1.character);
+                gameState.player2.health--;
+
+                setTimeout(() => {
+                    document.getElementById('player2Char').classList.add('hurt');
+                    setTimeout(() => {
+                        document.getElementById('player2Char').classList.remove('hurt');
+                    }, 300);
+                }, 350);
+
+                // Animate player attack
+                document.getElementById('player1Char').classList.add('attack');
+                setTimeout(() => {
+                    document.getElementById('player1Char').classList.remove('attack');
+                }, 300);
+
+            } else {
+                // Wrong!
+                input.classList.add('wrong');
+
+                // Self damage
+                showExplosion('left');
+                gameState.player1.health--;
+
+                document.getElementById('player1Char').classList.add('hurt');
+                setTimeout(() => {
+                    document.getElementById('player1Char').classList.remove('hurt');
+                    input.classList.remove('wrong');
+                    input.value = '';
+                }, 300);
+            }
+
+            updateHealthDisplay();
+            renderProblems();
+            checkGameEnd();
+
+            // Focus next unsolved
+            const nextUnsolved = gameState.problems.findIndex((p, i) => i > index && !p.solved);
+            if (nextUnsolved !== -1) {
+                document.getElementById(`input-${nextUnsolved}`).focus();
+            }
+        }
+
+        function fireProjectile(direction, character) {
+            const container = document.getElementById('projectilesContainer');
+            const projectile = document.createElement('div');
+            const charData = characters[character];
+
+            projectile.className = `projectile ${charData.projectile} moving-${direction === 'left' ? 'right' : 'left'}`;
+            projectile.style.top = '320px';
+
+            if (direction === 'left') {
+                projectile.style.left = '150px';
+            } else {
+                projectile.style.right = '150px';
+            }
+
+            container.appendChild(projectile);
+
+            setTimeout(() => {
+                projectile.remove();
+            }, 500);
+        }
+
+        function showExplosion(side) {
+            const container = document.getElementById('projectilesContainer');
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.top = '300px';
+
+            if (side === 'left') {
+                explosion.style.left = '100px';
+            } else {
+                explosion.style.right = '100px';
+            }
+
+            container.appendChild(explosion);
+
+            setTimeout(() => {
+                explosion.remove();
+            }, 400);
+        }
+
+        function checkGameEnd() {
+            if (gameState.player1.health <= 0) {
+                gameState.gameActive = false;
+                document.getElementById('player1Char').classList.add('lose');
+                setTimeout(() => showResult(false), 1000);
+            } else if (gameState.player2.health <= 0) {
+                gameState.gameActive = false;
+                document.getElementById('player2Char').classList.add('lose');
+                setTimeout(() => showResult(true), 1000);
+            }
+        }
+
+        // LEADERBOARD
+        function saveToLeaderboard() {
+            const leaderboard = JSON.parse(localStorage.getItem('mathFighterLeaderboard') || '[]');
+            const playerName = prompt('Введи своё имя для лидерборда:', 'Player') || 'Player';
+
+            leaderboard.push({
+                name: playerName,
+                wins: gameState.player1.wins,
+                character: gameState.player1.character,
+                level: gameState.player1.level,
+                date: new Date().toLocaleDateString()
+            });
+
+            leaderboard.sort((a, b) => b.wins - a.wins);
+            localStorage.setItem('mathFighterLeaderboard', JSON.stringify(leaderboard.slice(0, 20)));
+        }
+
+        function renderLeaderboard() {
+            const leaderboard = JSON.parse(localStorage.getItem('mathFighterLeaderboard') || '[]');
+            const list = document.getElementById('leaderboardList');
+
+            if (leaderboard.length === 0) {
+                list.innerHTML = '<div style="color: #888; font-size: 10px;">Пока нет записей</div>';
+                return;
+            }
+
+            list.innerHTML = leaderboard.map((entry, i) => `
+                <div style="display: flex; justify-content: space-between; padding: 8px; margin: 5px 0; background: #1a1a2a; border-radius: 4px; font-size: 10px; color: #fff;">
+                    <span>${i + 1}. ${entry.name}</span>
+                    <span>${entry.wins} побед (LVL ${entry.level})</span>
+                </div>
+            `).join('');
+        }
+
+        // Initialize
+        showMenu();
+    </script>
+</body>
+</html>
