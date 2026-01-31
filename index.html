@@ -41,17 +41,12 @@
             position: absolute;
             width: 100%;
             height: 100%;
-            background: linear-gradient(to bottom,
-                #1a0a2e 0%,
-                #2d1b4e 20%,
-                #4a1f6e 40%,
-                #1a1a3a 60%,
-                #0f0f1a 100%
-            );
+            background: url('assets/arena-bg.png') center/cover no-repeat;
         }
 
-        /* Stars */
+        /* Stars - hidden with custom background */
         .stars {
+            display: none;
             position: absolute;
             width: 100%;
             height: 40%;
@@ -71,8 +66,9 @@
                 radial-gradient(1px 1px at 850px 55px, white, transparent);
         }
 
-        /* City skyline - back layer */
+        /* City skyline - back layer - hidden with custom background */
         .city-back {
+            display: none;
             position: absolute;
             bottom: 180px;
             width: 100%;
@@ -112,8 +108,9 @@
             background-size: 12px 15px;
         }
 
-        /* City skyline - front layer */
+        /* City skyline - front layer - hidden with custom background */
         .city-front {
+            display: none;
             position: absolute;
             bottom: 150px;
             width: 100%;
@@ -137,8 +134,9 @@
         .bf9 { left: 750px; width: 70px; height: 80px; }
         .bf10 { left: 830px; width: 90px; height: 105px; }
 
-        /* Neon ALGONOVA sign */
+        /* Neon ALGONOVA sign - hidden with custom background */
         .neon-sign {
+            display: none;
             position: absolute;
             top: 100px;
             left: 50%;
