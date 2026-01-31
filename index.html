@@ -507,6 +507,14 @@
             animation-delay: 0.4s;
         }
 
+        .kotobot-sprite {
+            width: 100%;
+            height: 100%;
+            background: url('assets/Kotobot.png') center/contain no-repeat;
+            animation: char-idle 2s ease-in-out infinite;
+            animation-delay: 0.6s;
+        }
+
         /* Idle - gentle breathing/sway */
         @keyframes char-idle {
             0%, 100% { transform: translateY(0) scaleY(1); }
@@ -516,13 +524,15 @@
         /* Attack state */
         .character.attack .panda-sprite,
         .character.attack .satoru-sprite,
-        .character.attack .blaze-sprite {
+        .character.attack .blaze-sprite,
+        .character.attack .kotobot-sprite {
             animation: char-attack 0.4s ease-out forwards !important;
         }
 
         .character.right.attack .panda-sprite,
         .character.right.attack .satoru-sprite,
-        .character.right.attack .blaze-sprite {
+        .character.right.attack .blaze-sprite,
+        .character.right.attack .kotobot-sprite {
             animation: char-attack-right 0.4s ease-out forwards !important;
         }
 
@@ -541,7 +551,8 @@
         /* Hurt state - shake and flash red */
         .character.hurt .panda-sprite,
         .character.hurt .satoru-sprite,
-        .character.hurt .blaze-sprite {
+        .character.hurt .blaze-sprite,
+        .character.hurt .kotobot-sprite {
             animation: char-hurt 0.4s ease-out !important;
             filter: brightness(1.5) sepia(1) hue-rotate(-50deg) saturate(3);
         }
@@ -559,7 +570,8 @@
         /* Win animation - happy bounce */
         .character.win .panda-sprite,
         .character.win .satoru-sprite,
-        .character.win .blaze-sprite {
+        .character.win .blaze-sprite,
+        .character.win .kotobot-sprite {
             animation: char-win 0.5s ease-in-out infinite !important;
         }
 
@@ -573,7 +585,8 @@
         /* Lose animation - fall down sad */
         .character.lose .panda-sprite,
         .character.lose .satoru-sprite,
-        .character.lose .blaze-sprite {
+        .character.lose .blaze-sprite,
+        .character.lose .kotobot-sprite {
             animation: char-lose 0.8s ease-out forwards !important;
         }
 
@@ -585,7 +598,8 @@
         /* Character select preview - same static images, no idle animation */
         .char-preview .panda-sprite,
         .char-preview .satoru-sprite,
-        .char-preview .blaze-sprite {
+        .char-preview .blaze-sprite,
+        .char-preview .kotobot-sprite {
             animation: none;
         }
 
@@ -618,6 +632,20 @@
             border-radius: 50%;
             box-shadow: 0 0 20px #ff5722, 0 0 40px #ff5722;
             animation: flicker 0.1s infinite alternate;
+        }
+
+        .projectile-kotobot {
+            width: 45px;
+            height: 45px;
+            background: radial-gradient(circle, #00ff00 0%, #00cc00 40%, #009900 70%, transparent 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 20px #00ff00, 0 0 40px #00ff00;
+            animation: pulse-green 0.3s infinite alternate;
+        }
+
+        @keyframes pulse-green {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(1.2); opacity: 0.8; }
         }
 
         @keyframes spin {
@@ -1185,6 +1213,12 @@
                 sprite: 'blaze-sprite',
                 projectile: 'projectile-blaze',
                 attack: '🔥'
+            },
+            kotobot: {
+                name: 'КОТОБОТ',
+                sprite: 'kotobot-sprite',
+                projectile: 'projectile-kotobot',
+                attack: '🤖'
             }
         };
 
@@ -1683,9 +1717,8 @@
             gameState.problems = generateProblems(5);
             gameState.gameActive = false;
 
-            // Pick random AI character (different from player)
-            const aiChars = Object.keys(characters).filter(c => c !== gameState.player1.character);
-            gameState.player2.character = aiChars[Math.floor(Math.random() * aiChars.length)];
+            // AI always plays as Kotobot
+            gameState.player2.character = 'kotobot';
 
             // Setup UI
             setupGameUI();
