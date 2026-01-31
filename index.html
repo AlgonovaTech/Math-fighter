@@ -483,197 +483,112 @@
             75% { transform: translateX(10px); filter: brightness(0.5); }
         }
 
-        /* Pixel art character - Panda Girl (detailed 64x96) */
+        /* ===== CHARACTER SPRITES WITH CSS ANIMATIONS ===== */
+        /* Using static PNGs with transform-based animations */
+
         .panda-sprite {
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 96">\
-<!-- Panda ears -->\
-<rect x="16" y="2" width="10" height="10" fill="%23111"/>\
-<rect x="38" y="2" width="10" height="10" fill="%23111"/>\
-<rect x="18" y="4" width="6" height="6" fill="%23333"/>\
-<rect x="40" y="4" width="6" height="6" fill="%23333"/>\
-<!-- Hood outline -->\
-<rect x="14" y="8" width="36" height="6" fill="%23f5f5f5"/>\
-<rect x="12" y="12" width="40" height="4" fill="%23f5f5f5"/>\
-<!-- Face -->\
-<rect x="16" y="14" width="32" height="22" fill="%23fce4ec"/>\
-<rect x="14" y="16" width="36" height="18" fill="%23fce4ec"/>\
-<!-- Eye patches (panda style) -->\
-<rect x="18" y="18" width="10" height="8" fill="%23222" rx="2"/>\
-<rect x="36" y="18" width="10" height="8" fill="%23222" rx="2"/>\
-<!-- Eyes with shine -->\
-<rect x="20" y="20" width="6" height="6" fill="%2303a9f4"/>\
-<rect x="38" y="20" width="6" height="6" fill="%2303a9f4"/>\
-<rect x="22" y="21" width="2" height="2" fill="%23fff"/>\
-<rect x="40" y="21" width="2" height="2" fill="%23fff"/>\
-<rect x="21" y="24" width="4" height="1" fill="%23222"/>\
-<rect x="39" y="24" width="4" height="1" fill="%23222"/>\
-<!-- Blush -->\
-<rect x="16" y="26" width="4" height="2" fill="%23ffab91"/>\
-<rect x="44" y="26" width="4" height="2" fill="%23ffab91"/>\
-<!-- Nose -->\
-<rect x="30" y="26" width="4" height="3" fill="%23333"/>\
-<!-- Mouth -->\
-<rect x="28" y="30" width="8" height="2" fill="%23e91e63"/>\
-<rect x="30" y="32" width="4" height="1" fill="%23c2185b"/>\
-<!-- Hoodie body -->\
-<rect x="10" y="36" width="44" height="28" fill="%23f5f5f5"/>\
-<rect x="8" y="38" width="48" height="24" fill="%23fff"/>\
-<!-- Panda face on hoodie -->\
-<rect x="24" y="42" width="16" height="12" fill="%23fff" stroke="%23ddd" stroke-width="1"/>\
-<rect x="26" y="44" width="4" height="4" fill="%23222"/>\
-<rect x="34" y="44" width="4" height="4" fill="%23222"/>\
-<rect x="30" y="50" width="4" height="2" fill="%23333"/>\
-<!-- Arms -->\
-<rect x="4" y="40" width="8" height="18" fill="%23f5f5f5"/>\
-<rect x="52" y="40" width="8" height="18" fill="%23f5f5f5"/>\
-<!-- Panda paw gloves -->\
-<rect x="2" y="56" width="12" height="10" fill="%23222"/>\
-<rect x="4" y="58" width="3" height="4" fill="%23ffcccc"/>\
-<rect x="50" y="56" width="12" height="10" fill="%23222"/>\
-<rect x="57" y="58" width="3" height="4" fill="%23ffcccc"/>\
-<!-- Legs -->\
-<rect x="18" y="64" width="12" height="24" fill="%23f5f5f5"/>\
-<rect x="34" y="64" width="12" height="24" fill="%23f5f5f5"/>\
-<!-- Shoes -->\
-<rect x="16" y="86" width="14" height="8" fill="%23222"/>\
-<rect x="34" y="86" width="14" height="8" fill="%23222"/>\
-<rect x="18" y="88" width="4" height="2" fill="%23ffcccc"/>\
-<rect x="42" y="88" width="4" height="2" fill="%23ffcccc"/>\
-</svg>') center/contain no-repeat;
+            background: url('assets/Panda.png') center/contain no-repeat;
+            animation: char-idle 2s ease-in-out infinite;
         }
 
-        /* Pixel art character - Satoru (detailed 64x96) */
         .satoru-sprite {
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 96">\
-<!-- Hair (white/silver spiky) -->\
-<rect x="18" y="0" width="28" height="4" fill="%23f5f5f5"/>\
-<rect x="14" y="2" width="8" height="8" fill="%23fff"/>\
-<rect x="42" y="2" width="8" height="8" fill="%23fff"/>\
-<rect x="20" y="2" width="6" height="6" fill="%23e8e8e8"/>\
-<rect x="38" y="2" width="6" height="6" fill="%23e8e8e8"/>\
-<rect x="16" y="4" width="32" height="10" fill="%23fff"/>\
-<rect x="26" y="0" width="4" height="4" fill="%23f5f5f5"/>\
-<rect x="34" y="0" width="4" height="4" fill="%23f5f5f5"/>\
-<!-- Blindfold -->\
-<rect x="12" y="14" width="40" height="8" fill="%23111"/>\
-<rect x="10" y="15" width="44" height="6" fill="%23222"/>\
-<rect x="14" y="16" width="36" height="4" fill="%23333"/>\
-<!-- Face -->\
-<rect x="16" y="20" width="32" height="16" fill="%23fce4ec"/>\
-<rect x="14" y="22" width="36" height="12" fill="%23fce4ec"/>\
-<!-- Slight smile -->\
-<rect x="26" y="30" width="12" height="2" fill="%23e0bdc8"/>\
-<rect x="28" y="32" width="8" height="1" fill="%23d4a5b5"/>\
-<!-- Neck -->\
-<rect x="26" y="34" width="12" height="4" fill="%23fce4ec"/>\
-<!-- Uniform jacket (dark blue) -->\
-<rect x="10" y="38" width="44" height="28" fill="%231a237e"/>\
-<rect x="8" y="40" width="48" height="24" fill="%230d47a1"/>\
-<!-- Collar -->\
-<rect x="24" y="38" width="16" height="6" fill="%23263238"/>\
-<rect x="26" y="38" width="12" height="8" fill="%23fff"/>\
-<!-- Jacket details -->\
-<rect x="12" y="44" width="4" height="16" fill="%231565c0"/>\
-<rect x="48" y="44" width="4" height="16" fill="%231565c0"/>\
-<rect x="28" y="48" width="8" height="2" fill="%23ffeb3b"/>\
-<!-- Arms -->\
-<rect x="4" y="40" width="8" height="20" fill="%230d47a1"/>\
-<rect x="52" y="40" width="8" height="20" fill="%230d47a1"/>\
-<!-- Hands -->\
-<rect x="2" y="58" width="10" height="8" fill="%23fce4ec"/>\
-<rect x="52" y="58" width="10" height="8" fill="%23fce4ec"/>\
-<!-- Pants -->\
-<rect x="18" y="64" width="12" height="24" fill="%23212121"/>\
-<rect x="34" y="64" width="12" height="24" fill="%23212121"/>\
-<!-- Shoes -->\
-<rect x="16" y="86" width="14" height="8" fill="%23111"/>\
-<rect x="34" y="86" width="14" height="8" fill="%23111"/>\
-<!-- Infinity aura effect -->\
-<rect x="0" y="36" width="64" height="2" fill="%2303a9f433"/>\
-<rect x="0" y="42" width="64" height="1" fill="%2303a9f422"/>\
-<rect x="0" y="30" width="64" height="1" fill="%2303a9f422"/>\
-</svg>') center/contain no-repeat;
+            background: url('assets/Satoru.png') center/contain no-repeat;
+            animation: char-idle 2s ease-in-out infinite;
+            animation-delay: 0.2s;
         }
 
-        /* Pixel art character - Blaze (detailed 64x96) */
         .blaze-sprite {
             width: 100%;
             height: 100%;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 96">\
-<!-- Spiky flame hair -->\
-<rect x="22" y="0" width="6" height="8" fill="%23ff5722"/>\
-<rect x="36" y="0" width="6" height="8" fill="%23ff5722"/>\
-<rect x="28" y="0" width="8" height="6" fill="%23ff7043"/>\
-<rect x="16" y="4" width="8" height="10" fill="%23ff5722"/>\
-<rect x="40" y="4" width="8" height="10" fill="%23ff5722"/>\
-<rect x="20" y="6" width="24" height="10" fill="%23ff7043"/>\
-<rect x="24" y="2" width="4" height="4" fill="%23ffab91"/>\
-<rect x="36" y="2" width="4" height="4" fill="%23ffab91"/>\
-<!-- Headphones -->\
-<rect x="8" y="10" width="8" height="14" fill="%23333"/>\
-<rect x="10" y="12" width="6" height="10" fill="%23444"/>\
-<rect x="12" y="14" width="3" height="6" fill="%23f44336"/>\
-<rect x="48" y="10" width="8" height="14" fill="%23333"/>\
-<rect x="48" y="12" width="6" height="10" fill="%23444"/>\
-<rect x="49" y="14" width="3" height="6" fill="%23f44336"/>\
-<!-- Headband -->\
-<rect x="14" y="10" width="36" height="4" fill="%23333"/>\
-<!-- Face -->\
-<rect x="16" y="14" width="32" height="20" fill="%23fce4ec"/>\
-<rect x="14" y="16" width="36" height="16" fill="%23fce4ec"/>\
-<!-- Eyes (confident look) -->\
-<rect x="20" y="20" width="8" height="6" fill="%23fff"/>\
-<rect x="36" y="20" width="8" height="6" fill="%23fff"/>\
-<rect x="24" y="21" width="4" height="5" fill="%23d32f2f"/>\
-<rect x="40" y="21" width="4" height="5" fill="%23d32f2f"/>\
-<rect x="25" y="22" width="2" height="2" fill="%23111"/>\
-<rect x="41" y="22" width="2" height="2" fill="%23111"/>\
-<rect x="26" y="22" width="1" height="1" fill="%23fff"/>\
-<rect x="42" y="22" width="1" height="1" fill="%23fff"/>\
-<!-- Eyebrows -->\
-<rect x="20" y="18" width="8" height="2" fill="%23bf360c"/>\
-<rect x="36" y="18" width="8" height="2" fill="%23bf360c"/>\
-<!-- Smirk -->\
-<rect x="28" y="30" width="10" height="2" fill="%23e57373"/>\
-<rect x="36" y="29" width="2" height="2" fill="%23e57373"/>\
-<!-- Neck -->\
-<rect x="26" y="34" width="12" height="4" fill="%23fce4ec"/>\
-<!-- Hoodie (black with flame design) -->\
-<rect x="10" y="38" width="44" height="28" fill="%23212121"/>\
-<rect x="8" y="40" width="48" height="24" fill="%23333"/>\
-<!-- Flame design on hoodie -->\
-<rect x="24" y="44" width="4" height="12" fill="%23ff5722"/>\
-<rect x="28" y="42" width="4" height="16" fill="%23ff7043"/>\
-<rect x="32" y="44" width="4" height="14" fill="%23ff5722"/>\
-<rect x="36" y="46" width="4" height="10" fill="%23ff8a65"/>\
-<rect x="20" y="48" width="4" height="8" fill="%23ff8a65"/>\
-<!-- Hood strings -->\
-<rect x="28" y="38" width="2" height="8" fill="%23555"/>\
-<rect x="34" y="38" width="2" height="8" fill="%23555"/>\
-<!-- Arms -->\
-<rect x="4" y="40" width="8" height="20" fill="%23333"/>\
-<rect x="52" y="40" width="8" height="20" fill="%23333"/>\
-<!-- Chain bracelet -->\
-<rect x="4" y="54" width="8" height="2" fill="%23ffd54f"/>\
-<rect x="52" y="54" width="8" height="2" fill="%23ffd54f"/>\
-<!-- Hands -->\
-<rect x="2" y="58" width="10" height="8" fill="%23fce4ec"/>\
-<rect x="52" y="58" width="10" height="8" fill="%23fce4ec"/>\
-<!-- Pants (ripped jeans) -->\
-<rect x="18" y="64" width="12" height="24" fill="%23455a64"/>\
-<rect x="34" y="64" width="12" height="24" fill="%23455a64"/>\
-<rect x="20" y="76" width="8" height="2" fill="%2337474f"/>\
-<rect x="36" y="72" width="8" height="2" fill="%2337474f"/>\
-<!-- Red sneakers -->\
-<rect x="16" y="86" width="14" height="8" fill="%23c62828"/>\
-<rect x="34" y="86" width="14" height="8" fill="%23c62828"/>\
-<rect x="18" y="88" width="10" height="2" fill="%23fff"/>\
-<rect x="36" y="88" width="10" height="2" fill="%23fff"/>\
-</svg>') center/contain no-repeat;
+            background: url('assets/Guru.png') center/contain no-repeat;
+            animation: char-idle 2s ease-in-out infinite;
+            animation-delay: 0.4s;
+        }
+
+        /* Idle - gentle breathing/sway */
+        @keyframes char-idle {
+            0%, 100% { transform: translateY(0) scaleY(1); }
+            50% { transform: translateY(-3px) scaleY(1.01); }
+        }
+
+        /* Attack state */
+        .character.attack .panda-sprite,
+        .character.attack .satoru-sprite,
+        .character.attack .blaze-sprite {
+            animation: char-attack 0.4s ease-out forwards !important;
+        }
+
+        .character.right.attack .panda-sprite,
+        .character.right.attack .satoru-sprite,
+        .character.right.attack .blaze-sprite {
+            animation: char-attack-right 0.4s ease-out forwards !important;
+        }
+
+        @keyframes char-attack {
+            0% { transform: translateX(0) scale(1); }
+            30% { transform: translateX(50px) scale(1.1); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        @keyframes char-attack-right {
+            0% { transform: translateX(0) scale(1); }
+            30% { transform: translateX(-50px) scale(1.1); }
+            100% { transform: translateX(0) scale(1); }
+        }
+
+        /* Hurt state - shake and flash red */
+        .character.hurt .panda-sprite,
+        .character.hurt .satoru-sprite,
+        .character.hurt .blaze-sprite {
+            animation: char-hurt 0.4s ease-out !important;
+            filter: brightness(1.5) sepia(1) hue-rotate(-50deg) saturate(3);
+        }
+
+        @keyframes char-hurt {
+            0%, 100% { transform: translateX(0); }
+            15% { transform: translateX(-12px) rotate(-3deg); }
+            30% { transform: translateX(12px) rotate(3deg); }
+            45% { transform: translateX(-8px) rotate(-2deg); }
+            60% { transform: translateX(8px) rotate(2deg); }
+            75% { transform: translateX(-4px); }
+            90% { transform: translateX(4px); }
+        }
+
+        /* Win animation - happy bounce */
+        .character.win .panda-sprite,
+        .character.win .satoru-sprite,
+        .character.win .blaze-sprite {
+            animation: char-win 0.5s ease-in-out infinite !important;
+        }
+
+        @keyframes char-win {
+            0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+            25% { transform: translateY(-20px) rotate(-5deg) scale(1.05); }
+            50% { transform: translateY(-5px) rotate(0deg) scale(1.02); }
+            75% { transform: translateY(-20px) rotate(5deg) scale(1.05); }
+        }
+
+        /* Lose animation - fall down sad */
+        .character.lose .panda-sprite,
+        .character.lose .satoru-sprite,
+        .character.lose .blaze-sprite {
+            animation: char-lose 0.8s ease-out forwards !important;
+        }
+
+        @keyframes char-lose {
+            0% { transform: translateY(0) rotate(0deg); filter: none; }
+            100% { transform: translateY(30px) rotate(-12deg); filter: grayscale(70%) brightness(0.6); }
+        }
+
+        /* Character select preview - same static images, no idle animation */
+        .char-preview .panda-sprite,
+        .char-preview .satoru-sprite,
+        .char-preview .blaze-sprite {
+            animation: none;
         }
 
         /* PROJECTILES */
@@ -909,11 +824,11 @@
         }
 
         .char-card {
-            width: 150px;
-            padding: 20px;
+            width: 220px;
+            padding: 25px;
             background: #1a1a2a;
             border: 3px solid #555;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
@@ -931,14 +846,15 @@
         }
 
         .char-preview {
-            width: 80px;
-            height: 100px;
+            width: 160px;
+            height: 200px;
             margin: 0 auto 15px;
         }
 
         .char-name {
-            font-size: 10px;
+            font-size: 12px;
             color: #fff;
+            margin-top: 10px;
         }
 
         /* WIN/LOSE SCREEN */
@@ -1158,7 +1074,7 @@
                     <div class="char-preview">
                         <div class="blaze-sprite"></div>
                     </div>
-                    <div class="char-name">БЛЕЙЗ</div>
+                    <div class="char-name">СЕНСЕЙ</div>
                     <div class="level-badge">⭐ LVL 1</div>
                 </div>
             </div>
@@ -1267,7 +1183,7 @@
                 attack: '⚡'
             },
             blaze: {
-                name: 'БЛЕЙЗ',
+                name: 'СЕНСЕЙ',
                 sprite: 'blaze-sprite',
                 projectile: 'projectile-blaze',
                 attack: '🔥'
@@ -1404,6 +1320,16 @@
         // SCREEN NAVIGATION
         function showMenu() {
             hideAllScreens();
+            // Reset multiplayer state
+            gameState.roomId = null;
+            gameState.isHost = false;
+            gameState.mode = 'solo';
+            if (gameState.roomRef) {
+                gameState.roomRef.off();
+                gameState.roomRef = null;
+            }
+            // Clear URL params
+            window.history.replaceState({}, document.title, window.location.pathname);
             document.getElementById('menuScreen').classList.remove('hidden');
         }
 
@@ -1411,11 +1337,11 @@
             if (!gameState.player1.character) return;
 
             if (gameState.mode === 'multi') {
-                if (gameState.isHost) {
-                    // Host creates room, show waiting screen
+                if (!gameState.roomId) {
+                    // No room ID = creating new room (HOST)
                     showWaitingRoom();
                 } else {
-                    // Guest joining - join the room directly
+                    // Has room ID from URL = joining existing room (GUEST)
                     joinRoom();
                 }
             } else {
@@ -1430,10 +1356,16 @@
             hideAllScreens();
             document.getElementById('charSelectScreen').classList.remove('hidden');
 
-            // Update button text based on mode
+            // Update button text based on mode and role
             const startBtn = document.getElementById('startBtn');
             if (mode === 'multi') {
-                startBtn.textContent = '👥 СОЗДАТЬ КОМНАТУ';
+                if (gameState.roomId) {
+                    // Joining existing room
+                    startBtn.textContent = '👥 ВОЙТИ В КОМНАТУ';
+                } else {
+                    // Creating new room
+                    startBtn.textContent = '👥 СОЗДАТЬ КОМНАТУ';
+                }
             } else {
                 startBtn.textContent = 'НАЧАТЬ БОЙ';
             }
@@ -1470,15 +1402,19 @@
             // Listen for guest joining
             gameState.roomRef.child('guest').on('value', (snapshot) => {
                 const guest = snapshot.val();
-                if (guest && guest.ready) {
+                if (guest && guest.ready && gameState.isHost) {
                     // Guest joined! Start the game
                     gameState.player2.character = guest.character;
                     gameState.player2.isAI = false;
+                    gameState.mode = 'multi'; // Ensure multi mode
 
                     // Generate problems and sync
                     gameState.problems = generateProblems(5);
                     gameState.roomRef.child('problems').set(gameState.problems);
                     gameState.roomRef.child('status').set('playing');
+
+                    // Stop listening to prevent duplicate starts
+                    gameState.roomRef.child('guest').off();
 
                     // Start game for host
                     startMultiplayerGame();
@@ -1530,6 +1466,7 @@
         // Join room as guest
         function joinRoom() {
             gameState.roomRef = database.ref('rooms/' + gameState.roomId);
+            gameState.player2.isAI = false; // Important: playing with real player!
 
             // Set guest data
             gameState.roomRef.child('guest').set({
@@ -1543,14 +1480,17 @@
                 if (snapshot.val() === 'playing') {
                     // Get host character
                     gameState.roomRef.child('host').once('value', (hostSnap) => {
-                        gameState.player2.character = hostSnap.val().character;
-                        gameState.player2.isAI = false;
-                    });
+                        const hostData = hostSnap.val();
+                        if (hostData) {
+                            gameState.player2.character = hostData.character;
+                            gameState.player2.isAI = false;
+                        }
 
-                    // Get problems
-                    gameState.roomRef.child('problems').once('value', (probSnap) => {
-                        gameState.problems = probSnap.val();
-                        startMultiplayerGame();
+                        // Get problems
+                        gameState.roomRef.child('problems').once('value', (probSnap) => {
+                            gameState.problems = probSnap.val();
+                            startMultiplayerGame();
+                        });
                     });
                 }
             });
@@ -1558,12 +1498,16 @@
             // Show waiting message
             hideAllScreens();
             document.getElementById('waitingScreen').classList.remove('hidden');
-            document.getElementById('roomLink').textContent = 'Ожидание начала игры...';
+            document.getElementById('roomLink').textContent = 'Ожидание хоста...';
         }
 
         // Start multiplayer game
         function startMultiplayerGame() {
             hideAllScreens();
+
+            // Ensure multiplayer mode is set
+            gameState.mode = 'multi';
+            gameState.player2.isAI = false;
 
             // Reset health
             gameState.player1.health = 3;
@@ -1841,8 +1785,10 @@
                     // Focus first input
                     document.getElementById('input-0').focus();
 
-                    // Start AI
-                    startAI();
+                    // Start AI only in solo mode
+                    if (gameState.mode === 'solo') {
+                        startAI();
+                    }
 
                     // Start timer
                     startTimer();
