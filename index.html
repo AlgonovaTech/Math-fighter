@@ -411,29 +411,34 @@
 
         /* ========== OUTFIT SELECT ========== */
         #outfitScreen {
-            justify-content: center;
-            padding: 20px;
+            justify-content: flex-end;
+            padding: 10px 20px 0;
         }
 
         .outfit-layout {
             display: flex;
-            align-items: center;
-            gap: 30px;
+            align-items: flex-end;
+            gap: 20px;
             width: 100%;
             max-width: 900px;
             justify-content: center;
+            flex: 1;
         }
 
         .outfit-preview {
             flex-shrink: 0;
             text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
         }
 
         .outfit-preview-img {
-            width: 280px;
-            height: 380px;
+            width: 350px;
+            height: 500px;
             object-fit: contain;
-            border-radius: 8px;
+            object-position: bottom center;
             filter: drop-shadow(0 0 20px rgba(233, 30, 99, 0.3));
             transition: all 0.3s;
         }
@@ -442,7 +447,8 @@
             font-size: 14px;
             color: #ffeb3b;
             text-shadow: 0 0 15px #ffeb3b55;
-            margin-top: 12px;
+            margin-top: 4px;
+            margin-bottom: 8px;
         }
 
         .outfit-panel {
@@ -816,8 +822,8 @@
             .char-card .char-avatar { width: 90px; height: 110px; }
             .char-card-name { font-size: 8px; }
 
-            .outfit-layout { flex-direction: column; gap: 16px; }
-            .outfit-preview-img { width: 160px; height: 220px; }
+            .outfit-layout { flex-direction: column; gap: 10px; align-items: center; }
+            .outfit-preview-img { width: 200px; height: 280px; }
             .outfit-panel { max-width: 100%; }
             .outfit-card-img-wrap { height: 80px; }
 
