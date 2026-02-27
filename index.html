@@ -1168,7 +1168,7 @@
     // ==================== CONFIGURATION ====================
     const CONFIG = {
         questionTime: 30,
-        totalQuestions: 15,
+        totalQuestions: 4,
         basePoints: 100,
         speedBonusMax: 50,
     };
@@ -1291,199 +1291,43 @@
     ];
 
     // ==================== QUESTION DATA ====================
-    // 15 humorous questions — 3 options each, correct: index (0-2)
+    // 4 questions — 3 options each, all answers are accepted
     const QUESTIONS = [
         {
             text: {
-                ru: 'В каком виде спорта у женщин есть абсолютное преимущество?',
-                en: 'In which sport do women have an absolute advantage?'
+                ru: 'В каком виде спорта женщины имеют неоспоримое преимущество?',
+                en: 'In which sport do women have an undeniable advantage?'
             },
             options: [
-                { text: { ru: 'Синхронное плавание', en: 'Synchronized swimming' } },
-                { text: { ru: 'Шахматы — ферзь ходит как хочет', en: 'Chess — the queen moves as she pleases' } },
-                { text: { ru: 'Кёрлинг', en: 'Curling' } },
-            ],
-            correct: 1,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Какой день по статистике — любимый день женщины?',
-                en: 'What day is statistically a woman\'s favorite?'
-            },
-            options: [
-                { text: { ru: '8 Марта', en: 'March 8' } },
-                { text: { ru: '3 Сентября', en: 'September 3' } },
-                { text: { ru: '29 Февраля', en: 'February 29' } },
+                { text: { ru: 'Шахматы, потому что Королева ходит как хочет', en: 'Chess, because the Queen moves as she pleases' } },
+                { text: { ru: 'Яхтинг, потому что это красиво', en: 'Yachting, because it\'s beautiful' } },
+                { text: { ru: 'Кёрлинг — ну тут понятно', en: 'Curling — well, obviously' } },
             ],
             correct: 0,
             timeLimit: 30,
         },
         {
             text: {
-                ru: 'Когда вы слышите слово «Стартер», о чём вы думаете?',
-                en: 'When you hear the word "Starter", what comes to mind?'
+                ru: 'Статистически — любимый день женщин:',
+                en: 'Statistically — women\'s favorite day:'
             },
             options: [
-                { text: { ru: 'Блюдо перед основным', en: 'A dish before the main course' } },
-                { text: { ru: 'Деталь двигателя', en: 'An engine part' } },
-                { text: { ru: 'Набор для начинающих', en: 'A beginner\'s kit' } },
+                { text: { ru: '8 Марта, потому что цветы', en: 'March 8, because flowers' } },
+                { text: { ru: '3 Сентября, потому что всё всерьёз', en: 'September 3, because everything is serious' } },
+                { text: { ru: '29 Февраля, потому что это так редко', en: 'February 29, because it\'s so rare' } },
             ],
             correct: 0,
             timeLimit: 30,
         },
         {
             text: {
-                ru: 'Сколько пар обуви достаточно для женщины?',
-                en: 'How many pairs of shoes are enough for a woman?'
+                ru: 'Когда вы слышите «Стартер», это что:',
+                en: 'When you hear "Starter", what is it:'
             },
             options: [
-                { text: { ru: '10', en: '10' } },
-                { text: { ru: '25', en: '25' } },
-                { text: { ru: 'Такого числа не существует', en: 'Such a number doesn\'t exist' } },
-            ],
-            correct: 2,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Что женщина имеет в виду, говоря «Мне нечего надеть»?',
-                en: 'What does a woman mean by "I have nothing to wear"?'
-            },
-            options: [
-                { text: { ru: 'Шкаф пуст', en: 'The closet is empty' } },
-                { text: { ru: 'Нет ничего нового', en: 'Nothing new to wear' } },
-                { text: { ru: 'Нет настроения выбирать', en: 'Not in the mood to choose' } },
-            ],
-            correct: 1,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Какой суперсилой хотели бы обладать большинство женщин?',
-                en: 'What superpower would most women want?'
-            },
-            options: [
-                { text: { ru: 'Летать', en: 'Flying' } },
-                { text: { ru: 'Читать мысли мужчин', en: 'Reading men\'s thoughts' } },
-                { text: { ru: 'Останавливать время перед дедлайном', en: 'Stopping time before deadlines' } },
-            ],
-            correct: 2,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Что происходит, когда женщина говорит «Я не голодная»?',
-                en: 'What happens when a woman says "I\'m not hungry"?'
-            },
-            options: [
-                { text: { ru: 'Она действительно не голодная', en: 'She\'s really not hungry' } },
-                { text: { ru: 'Она съест половину твоей порции', en: 'She\'ll eat half of your portion' } },
-                { text: { ru: 'Она закажет отдельно через 10 минут', en: 'She\'ll order separately in 10 minutes' } },
-            ],
-            correct: 1,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Какой цветок является символом 8 Марта в России?',
-                en: 'Which flower is the symbol of March 8 in Russia?'
-            },
-            options: [
-                { text: { ru: 'Роза', en: 'Rose' } },
-                { text: { ru: 'Мимоза', en: 'Mimosa' } },
-                { text: { ru: 'Тюльпан', en: 'Tulip' } },
-            ],
-            correct: 1,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Сколько времени женщине нужно, чтобы «быстро собраться»?',
-                en: 'How long does a woman need to "get ready quickly"?'
-            },
-            options: [
-                { text: { ru: '15 минут', en: '15 minutes' } },
-                { text: { ru: '45 минут', en: '45 minutes' } },
-                { text: { ru: '«Быстро» — понятие относительное', en: '"Quickly" is a relative concept' } },
-            ],
-            correct: 2,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Что значит «Делай как хочешь» от женщины?',
-                en: 'What does "Do whatever you want" from a woman mean?'
-            },
-            options: [
-                { text: { ru: 'Полная свобода действий', en: 'Total freedom of action' } },
-                { text: { ru: 'Тест на правильный ответ', en: 'A test for the right answer' } },
-                { text: { ru: 'Ловушка без правильного ответа', en: 'A trap with no right answer' } },
-            ],
-            correct: 2,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Кто стал первой женщиной в космосе?',
-                en: 'Who was the first woman in space?'
-            },
-            options: [
-                { text: { ru: 'Валентина Терешкова', en: 'Valentina Tereshkova' } },
-                { text: { ru: 'Салли Райд', en: 'Sally Ride' } },
-                { text: { ru: 'Светлана Савицкая', en: 'Svetlana Savitskaya' } },
-            ],
-            correct: 0,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Почему женщины живут дольше мужчин?',
-                en: 'Why do women live longer than men?'
-            },
-            options: [
-                { text: { ru: 'Здоровое питание', en: 'Healthy eating' } },
-                { text: { ru: 'Не делают глупостей на спор', en: 'They don\'t do stupid things on a dare' } },
-                { text: { ru: 'Генетика', en: 'Genetics' } },
-            ],
-            correct: 1,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Сколько раз за день женщина смотрит в зеркало?',
-                en: 'How many times a day does a woman look in the mirror?'
-            },
-            options: [
-                { text: { ru: '5-10 раз', en: '5-10 times' } },
-                { text: { ru: '20-30 раз', en: '20-30 times' } },
-                { text: { ru: 'Каждая отражающая поверхность — зеркало', en: 'Every reflective surface is a mirror' } },
-            ],
-            correct: 2,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Какая фраза мужчины вызывает максимальное подозрение?',
-                en: 'Which phrase from a man causes maximum suspicion?'
-            },
-            options: [
-                { text: { ru: '«Я на работе задержусь»', en: '"I\'ll be late at work"' } },
-                { text: { ru: '«Телефон разрядился»', en: '"My phone died"' } },
-                { text: { ru: 'Обе фразы одинаково подозрительны', en: 'Both phrases are equally suspicious' } },
-            ],
-            correct: 2,
-            timeLimit: 30,
-        },
-        {
-            text: {
-                ru: 'Какой самый правильный ответ на вопрос «Я поправилась?»',
-                en: 'What is the best answer to "Did I gain weight?"'
-            },
-            options: [
-                { text: { ru: '«Нет, ты прекрасна!»', en: '"No, you\'re beautiful!"' } },
-                { text: { ru: '«Немного»', en: '"A little"' } },
-                { text: { ru: 'Притвориться, что не слышишь', en: 'Pretend you didn\'t hear' } },
+                { text: { ru: 'Это что-то на мужском', en: 'It\'s something in man-language' } },
+                { text: { ru: 'Это фраза для знакомства в баре', en: 'It\'s a pickup line at a bar' } },
+                { text: { ru: 'Это чувак, делающий звезду из кого хочешь', en: 'It\'s a guy who makes a star out of anyone' } },
             ],
             correct: 0,
             timeLimit: 30,
