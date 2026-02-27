@@ -679,10 +679,11 @@
         .quiz-answer-btn:nth-child(2) .num { background: #1565c0; }
         .quiz-answer-btn:nth-child(3) .num { background: #2e7d32; }
 
-        .quiz-answer-btn.correct {
-            border-color: #4caf50;
-            background: rgba(26, 58, 26, 0.9);
-            box-shadow: 0 0 20px rgba(76, 175, 80, 0.4);
+        .quiz-answer-btn.correct,
+        .quiz-answer-btn.selected {
+            border-color: #e91e63;
+            background: rgba(58, 20, 40, 0.9);
+            box-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
         }
 
         .quiz-answer-btn.wrong {
@@ -731,52 +732,91 @@
         /* ========== RESULTS SCREEN ========== */
         #resultsScreen {
             text-align: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .results-queen-title {
+            font-size: 28px;
+            color: #ff69b4;
+            text-shadow: 0 0 30px #ff69b4, 0 0 60px #e91e63, 0 0 90px #ff1493;
+            margin-bottom: 10px;
+            animation: queen-glow 2s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes queen-glow {
+            0%, 100% { text-shadow: 0 0 30px #ff69b4, 0 0 60px #e91e63, 0 0 90px #ff1493; transform: scale(1); }
+            50% { text-shadow: 0 0 50px #ff69b4, 0 0 80px #e91e63, 0 0 120px #ff1493; transform: scale(1.05); }
+        }
+
+        .results-flowers {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .results-flower {
+            position: absolute;
+            font-size: 24px;
+            animation: flower-float 4s ease-in-out infinite;
+            opacity: 0.8;
+        }
+
+        @keyframes flower-float {
+            0%, 100% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            50% { transform: translateY(-15px) rotate(15deg); opacity: 1; }
         }
 
         .results-avatar {
-            width: 140px;
-            height: 180px;
+            width: 250px;
+            height: 350px;
             margin-bottom: 16px;
-            filter: drop-shadow(0 0 30px rgba(255, 235, 59, 0.4));
+            filter: drop-shadow(0 0 40px rgba(255, 105, 180, 0.5));
+            animation: avatar-entrance 1s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+            position: relative;
+            z-index: 2;
+        }
+
+        @keyframes avatar-entrance {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
         }
 
         .results-avatar img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            animation: avatar-float 3s ease-in-out infinite;
+        }
+
+        @keyframes avatar-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
         .results-name {
-            font-size: 16px;
+            font-size: 14px;
             color: #ffeb3b;
-            margin-bottom: 20px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
         }
 
-        .results-score-big {
-            font-size: 48px;
-            color: #e91e63;
-            text-shadow: 0 0 40px #e91e6388;
-            margin-bottom: 8px;
-        }
-
-        .results-score-label {
-            font-size: 10px;
-            color: #ce93d8;
-            margin-bottom: 24px;
-        }
-
-        .results-points {
-            font-size: 12px;
-            color: #ffeb3b;
-            margin-bottom: 24px;
-        }
+        .results-score-big { display: none; }
+        .results-score-label { display: none; }
+        .results-points { display: none; }
 
         .results-message {
-            font-size: 10px;
+            font-size: 11px;
             color: #f8bbd0;
             line-height: 2.2;
             max-width: 500px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
+            position: relative;
+            z-index: 2;
         }
 
         .results-greeting {
@@ -784,18 +824,41 @@
             color: #ce93d8;
             line-height: 2;
             max-width: 450px;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             padding: 16px;
-            border: 2px solid #9c27b044;
+            border: 2px solid #ff69b444;
             border-radius: 8px;
             background: rgba(26, 26, 42, 0.6);
+            position: relative;
+            z-index: 2;
         }
 
         .results-btns {
             display: flex;
-            gap: 16px;
+            gap: 12px;
             flex-wrap: wrap;
             justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .results-download-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #e91e63, #ff69b4);
+            border: 3px solid #ff69b4;
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.3);
+            box-shadow: 0 0 20px rgba(255, 105, 180, 0.4);
+            transition: all 0.2s;
+        }
+
+        .results-download-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 105, 180, 0.6);
         }
 
         /* Confetti */
@@ -833,7 +896,8 @@
             .quiz-question-text { font-size: 9px; }
 
             .results-score-big { font-size: 36px; }
-            .results-avatar { width: 100px; height: 130px; }
+            .results-avatar { width: 180px; height: 250px; }
+            .results-queen-title { font-size: 20px; }
 
             .pixel-btn { font-size: 9px; padding: 10px 18px; }
             .back-btn { font-size: 8px; padding: 6px 10px; }
@@ -927,6 +991,8 @@
 
         <!-- ===== SCREEN: Results ===== -->
         <div class="screen" id="resultsScreen">
+            <div class="results-flowers" id="resultsFlowers"></div>
+            <div class="results-queen-title" id="resultsQueenTitle">Ты королева!</div>
             <div class="results-avatar" id="resultsAvatar"></div>
             <div class="results-name" id="resultsName"></div>
             <div class="results-score-big" id="resultsScoreBig"></div>
@@ -935,6 +1001,7 @@
             <div class="results-message" id="resultsMessage"></div>
             <div class="results-greeting" id="resultsGreeting"></div>
             <div class="results-btns">
+                <button class="results-download-btn" onclick="downloadResultImage()" id="downloadResultBtn">СКАЧАТЬ</button>
                 <button class="pixel-btn" onclick="playAgain()" data-i18n="playAgainBtn">ИГРАТЬ ЕЩЁ</button>
                 <button class="pixel-btn secondary" onclick="showScreen('welcomeScreen')" data-i18n="menuBtn">МЕНЮ</button>
             </div>
@@ -1042,30 +1109,27 @@
             id: 1,
             name: { ru: 'Армиша', en: 'Armisha' },
             outfits: [
-                { image: 'assets/characters/armisha_archer.png', card: 'assets/characters/armisha_archer_card.png', label: { ru: 'Лучница', en: 'Archer' } },
-                { image: 'assets/characters/armisha_dj.png', card: 'assets/characters/armisha_dj_card.png', label: { ru: 'DJ', en: 'DJ' } },
-                { image: 'assets/characters/armisha_hunter.png', card: 'assets/characters/armisha_hunter_card.png', label: { ru: 'Охотница', en: 'Hunter' } },
-                { image: 'assets/characters/armisha_reader.png', card: 'assets/characters/armisha_reader_card.png', label: { ru: 'Книжница', en: 'Reader' } },
+                { image: 'assets/characters/armisha_archer.png', card: 'assets/characters/armisha_archer.png', label: { ru: 'Лучница', en: 'Archer' } },
+                { image: 'assets/characters/armisha_dj.png', card: 'assets/characters/armisha_dj.png', label: { ru: 'DJ', en: 'DJ' } },
+                { image: 'assets/characters/armisha_reader.png', card: 'assets/characters/armisha_reader.png', label: { ru: 'Книжница', en: 'Reader' } },
             ],
         },
         {
             id: 2,
             name: { ru: 'Ира', en: 'Ira' },
             outfits: [
-                { image: 'assets/characters/ira_crafter.png', card: 'assets/characters/ira_crafter_card.png', label: { ru: 'Художник', en: 'Crafter' } },
-                { image: 'assets/characters/ira_stylist.png', card: 'assets/characters/ira_stylist_card.png', label: { ru: 'Стилист', en: 'Stylist' } },
-                { image: 'assets/characters/ira_sommelier.png', card: 'assets/characters/ira_sommelier_card.png', label: { ru: 'Сомелье', en: 'Sommelier' } },
-                { image: 'assets/characters/ira_coder.png', card: 'assets/characters/ira_coder_card.png', label: { ru: 'Кодер', en: 'Coder' } },
+                { image: 'assets/characters/ira_crafter.png', card: 'assets/characters/ira_crafter.png', label: { ru: 'Художник', en: 'Crafter' } },
+                { image: 'assets/characters/ira_stylist.png', card: 'assets/characters/ira_stylist.png', label: { ru: 'Стилист', en: 'Stylist' } },
+                { image: 'assets/characters/ira_sommelier.png', card: 'assets/characters/ira_sommelier.png', label: { ru: 'Сомелье', en: 'Sommelier' } },
             ],
         },
         {
             id: 3,
             name: { ru: 'Влада', en: 'Vlada' },
             outfits: [
-                { image: 'assets/characters/vlada_cook.png', card: 'assets/characters/vlada_cook_card.png', label: { ru: 'Повар', en: 'Cook' } },
-                { image: 'assets/characters/vlada_samurai.png', card: 'assets/characters/vlada_samurai_card.png', label: { ru: 'Самурай', en: 'Samurai' } },
-                { image: 'assets/characters/vlada_astronaut.png', card: 'assets/characters/vlada_astronaut_card.png', label: { ru: 'Космонавт', en: 'Astronaut' } },
-                { image: 'assets/characters/vlada_wizard.png', card: 'assets/characters/vlada_wizard_card.png', label: { ru: 'Маг', en: 'Wizard' } },
+                { image: 'assets/characters/vlada_samurai.png', card: 'assets/characters/vlada_samurai.png', label: { ru: 'Самурай', en: 'Samurai' } },
+                { image: 'assets/characters/vlada_astronaut.png', card: 'assets/characters/vlada_astronaut.png', label: { ru: 'Космонавт', en: 'Astronaut' } },
+                { image: 'assets/characters/vlada_crafter.png', card: 'assets/characters/vlada_crafter.png', label: { ru: 'Крафтер', en: 'Crafter' } },
             ],
         },
     ];
@@ -1491,50 +1555,37 @@
         clearInterval(gameState.timerInterval);
 
         const q = gameState.shuffledQuestions[gameState.currentQuestion];
-        const isCorrect = index === q.correct;
         const buttons = document.querySelectorAll('.quiz-answer-btn');
 
         buttons.forEach(btn => btn.classList.add('disabled'));
-        buttons[q.correct].classList.add('correct');
+        buttons[index].classList.add('selected');
 
-        if (!isCorrect) {
-            buttons[index].classList.add('wrong');
-        }
-
-        if (isCorrect) {
-            const timeBonus = Math.round((gameState.timeRemaining / (q.timeLimit || CONFIG.questionTime)) * CONFIG.speedBonusMax);
-            gameState.score += CONFIG.basePoints + timeBonus;
-            gameState.correctCount++;
-            gameState.answers.push(true);
-            showFeedback('✓');
-        } else {
-            gameState.answers.push(false);
-            showFeedback('✗');
-        }
+        const timeBonus = Math.round((gameState.timeRemaining / (q.timeLimit || CONFIG.questionTime)) * CONFIG.speedBonusMax);
+        gameState.score += CONFIG.basePoints + timeBonus;
+        gameState.correctCount++;
+        gameState.answers.push(true);
 
         renderProgressBar();
         document.getElementById('quizScoreDisplay').textContent = `${t('score')}: ${gameState.score}`;
 
         setTimeout(() => {
             showQuestion(gameState.currentQuestion + 1);
-        }, 1800);
+        }, 1200);
     }
 
     function timeUp() {
         gameState.isAnswered = true;
-        const q = gameState.shuffledQuestions[gameState.currentQuestion];
         const buttons = document.querySelectorAll('.quiz-answer-btn');
 
         buttons.forEach(btn => btn.classList.add('disabled'));
-        buttons[q.correct].classList.add('correct');
-        gameState.answers.push(false);
+        gameState.correctCount++;
+        gameState.answers.push(true);
 
         renderProgressBar();
-        showFeedback('⏰');
 
         setTimeout(() => {
             showQuestion(gameState.currentQuestion + 1);
-        }, 1800);
+        }, 1200);
     }
 
     function showFeedback(emoji) {
@@ -1560,19 +1611,32 @@
         document.getElementById('resultsAvatar').innerHTML = `<img src="${outfit.image}" alt="${name}">`;
         document.getElementById('resultsName').textContent = name;
 
-        const total = gameState.shuffledQuestions.length;
-        document.getElementById('resultsScoreBig').textContent = `${gameState.correctCount}/${total}`;
-        document.getElementById('resultsPoints').textContent = `${gameState.score} ${t('points')}`;
+        document.getElementById('resultsMessage').textContent = t('greeting');
+        document.getElementById('resultsGreeting').textContent = '';
 
-        let msgKey;
-        if (gameState.correctCount === total) msgKey = 'resultMsg15';
-        else if (gameState.correctCount >= 12) msgKey = 'resultMsg12';
-        else if (gameState.correctCount >= 8) msgKey = 'resultMsg8';
-        else if (gameState.correctCount >= 4) msgKey = 'resultMsg4';
-        else msgKey = 'resultMsg0';
+        // Spawn flower decorations
+        const flowers = ['🌸', '🌺', '🌷', '🌹', '💐', '🌻', '🪻', '💮', '🏵'];
+        const flowersContainer = document.getElementById('resultsFlowers');
+        flowersContainer.innerHTML = '';
+        for (let i = 0; i < 20; i++) {
+            const f = document.createElement('span');
+            f.className = 'results-flower';
+            f.textContent = flowers[Math.floor(Math.random() * flowers.length)];
+            f.style.left = Math.random() * 90 + 5 + '%';
+            f.style.top = Math.random() * 90 + 5 + '%';
+            f.style.animationDelay = (Math.random() * 3) + 's';
+            f.style.animationDuration = (3 + Math.random() * 3) + 's';
+            f.style.fontSize = (18 + Math.random() * 20) + 'px';
+            flowersContainer.appendChild(f);
+        }
+    }
 
-        document.getElementById('resultsMessage').textContent = t(msgKey);
-        document.getElementById('resultsGreeting').textContent = t('greeting');
+    function downloadResultImage() {
+        const outfit = gameState.selectedChar.outfits[gameState.selectedOutfit];
+        const link = document.createElement('a');
+        link.href = outfit.image;
+        link.download = 'queen-' + gameState.selectedChar.name.ru + '.png';
+        link.click();
     }
 
     function playAgain() {
