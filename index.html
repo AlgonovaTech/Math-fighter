@@ -602,6 +602,22 @@
             align-items: center;
             justify-content: flex-start;
             padding: 12px 30px 20px;
+            position: relative;
+        }
+
+        .quiz-character {
+            position: absolute;
+            left: 5%;
+            bottom: 25%;
+            z-index: 2;
+            pointer-events: none;
+            filter: drop-shadow(0 0 15px rgba(233, 30, 99, 0.3));
+        }
+
+        .quiz-character img {
+            height: 35vh;
+            width: auto;
+            object-fit: contain;
         }
 
         .quiz-panel {
@@ -614,6 +630,8 @@
             display: flex;
             flex-direction: column;
             gap: 12px;
+            z-index: 3;
+            position: relative;
         }
 
         .quiz-question-card {
@@ -896,6 +914,8 @@
             .outfit-card-img-wrap { height: 80px; }
 
             #quizScreen { padding: 20px 10px; }
+            .quiz-character { left: 2%; bottom: 22%; }
+            .quiz-character img { height: 25vh; }
             .quiz-panel { width: 100%; max-width: 100%; align-self: center; }
             .quiz-answer-btn { font-size: 8px; padding: 10px 12px; }
             .quiz-question-text { font-size: 9px; }
@@ -980,8 +1000,9 @@
                 <div class="quiz-timer-display" id="quizTimerDisplay">00:30</div>
                 <div class="quiz-progress-bar" id="quizProgressBar"></div>
             </div>
-            <!-- Hidden elements for JS compatibility -->
-            <img id="quizCharImg" src="" alt="" style="display:none">
+            <div class="quiz-character" id="quizCharacter">
+                <img id="quizCharImg" src="" alt="">
+            </div>
             <div id="quizCharName" style="display:none"></div>
             <div id="quizScoreDisplay" style="display:none"></div>
             <div class="quiz-panel">
