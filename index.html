@@ -286,35 +286,154 @@
             100% { opacity: 0; }
         }
 
-        /* Glow pulse for button on welcome */
-        @keyframes glow-pulse {
-            0%, 100% { box-shadow: 0 4px 0 #880e4f, 0 0 20px rgba(233, 30, 99, 0.3); }
-            50% { box-shadow: 0 4px 0 #880e4f, 0 0 40px rgba(233, 30, 99, 0.6), 0 0 80px rgba(233, 30, 99, 0.2); }
-        }
-
-        #welcomeScreen .pixel-btn {
+        /* ===== START BUTTON ===== */
+        .start-btn-wrap {
             position: absolute;
-            bottom: 28%;
+            bottom: 26%;
             left: 50%;
             transform: translateX(-50%);
             z-index: 10;
-            background: transparent;
+            width: 92%;
+            max-width: 500px;
+        }
+
+        /* Cover the baked-in button from bg image */
+        .start-btn-cover {
+            position: absolute;
+            bottom: 26%;
+            left: 0;
+            right: 0;
+            height: 18%;
+            z-index: 9;
+            background: linear-gradient(to bottom,
+                transparent 0%,
+                rgba(5, 2, 15, 0.85) 15%,
+                rgba(5, 2, 15, 1) 25%,
+                rgba(5, 2, 15, 1) 75%,
+                rgba(5, 2, 15, 0.85) 85%,
+                transparent 100%
+            );
+            pointer-events: none;
+        }
+
+        .start-btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 16px;
+            color: #fff;
+            background: linear-gradient(135deg, #e91e63 0%, #9c27b0 50%, #e91e63 100%);
+            background-size: 200% 200%;
             border: none;
-            box-shadow: none;
-            color: transparent;
-            padding: 30px 120px;
+            border-radius: 12px;
+            padding: 26px 40px;
+            width: 100%;
+            justify-content: center;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+            animation: start-float 3s ease-in-out infinite, start-gradient 4s ease infinite;
+            box-shadow:
+                0 0 20px rgba(233, 30, 99, 0.4),
+                0 0 60px rgba(233, 30, 99, 0.2),
+                0 6px 0 #880e4f,
+                inset 0 1px 0 rgba(255,255,255,0.2);
+            transition: filter 0.2s, transform 0.1s;
         }
 
-        #welcomeScreen .pixel-btn:hover {
-            box-shadow: none;
-            filter: brightness(1.3);
-            transform: translateX(-50%) scale(1.05);
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 40%;
+            height: 200%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.25), transparent);
+            transform: skewX(-20deg);
+            animation: start-shimmer 3s ease-in-out infinite;
         }
 
-        #welcomeScreen .pixel-btn:active {
-            box-shadow: none;
-            transform: translateX(-50%) scale(0.97);
+        .start-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            border: 2px solid rgba(255,255,255,0.15);
+            pointer-events: none;
+            animation: start-border-glow 2s ease-in-out infinite;
+        }
+
+        .start-btn:hover {
+            filter: brightness(1.2);
+            transform: scale(1.05);
+        }
+
+        .start-btn:active {
+            filter: brightness(0.95);
+            transform: scale(0.97);
+            box-shadow:
+                0 0 15px rgba(233, 30, 99, 0.3),
+                0 2px 0 #880e4f,
+                inset 0 1px 0 rgba(255,255,255,0.2);
+        }
+
+        .start-btn-text {
+            position: relative;
+            z-index: 1;
+            letter-spacing: 3px;
+        }
+
+        .start-btn-arrows {
+            display: flex;
+            gap: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .start-btn-arrows span {
+            display: inline-block;
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 0 0 8px rgba(255, 235, 59, 0.6);
+        }
+
+        .start-btn-arrows.left span:nth-child(1) { animation: chevron-bounce 1.2s ease-in-out 0s infinite; }
+        .start-btn-arrows.left span:nth-child(2) { animation: chevron-bounce 1.2s ease-in-out 0.15s infinite; }
+        .start-btn-arrows.left span:nth-child(3) { animation: chevron-bounce 1.2s ease-in-out 0.3s infinite; }
+
+        .start-btn-arrows.right span:nth-child(1) { animation: chevron-bounce 1.2s ease-in-out 0.3s infinite; }
+        .start-btn-arrows.right span:nth-child(2) { animation: chevron-bounce 1.2s ease-in-out 0.15s infinite; }
+        .start-btn-arrows.right span:nth-child(3) { animation: chevron-bounce 1.2s ease-in-out 0s infinite; }
+
+        @keyframes start-float {
+            0%, 100% { margin-top: 0; }
+            50% { margin-top: -8px; }
+        }
+
+        @keyframes start-gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes start-shimmer {
+            0%, 100% { left: -60%; opacity: 0; }
+            40% { opacity: 1; }
+            60% { left: 120%; opacity: 1; }
+            61% { opacity: 0; }
+        }
+
+        @keyframes start-border-glow {
+            0%, 100% { border-color: rgba(255,255,255,0.15); }
+            50% { border-color: rgba(255,255,255,0.4); }
+        }
+
+        @keyframes chevron-bounce {
+            0%, 100% { transform: translateX(0); opacity: 0.6; }
+            50% { transform: translateX(4px); opacity: 1; }
         }
 
         /* ========== CHARACTER SELECT ========== */
@@ -904,6 +1023,10 @@
             .welcome-title { font-size: 14px; }
             .welcome-desc { font-size: 8px; max-width: 90%; }
 
+            .start-btn { font-size: 12px; padding: 16px 32px; gap: 10px; }
+            .start-btn-arrows span { font-size: 14px; }
+            .start-btn-wrap { bottom: 20%; }
+
             .char-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; }
             .char-card .char-avatar { width: 90px; height: 110px; }
             .char-card-name { font-size: 8px; }
@@ -963,7 +1086,14 @@
                     Выбери своего персонажа, выбери образ и пройди весёлую викторину!
                 </div>
             </div>
-            <button class="pixel-btn" onclick="showScreen('charSelectScreen')" data-i18n="startBtn">НАЧАТЬ</button>
+            <div class="start-btn-cover"></div>
+            <div class="start-btn-wrap">
+                <button class="start-btn" onclick="showScreen('charSelectScreen')">
+                    <span class="start-btn-arrows left"><span>&#10095;</span><span>&#10095;</span><span>&#10095;</span></span>
+                    <span class="start-btn-text" data-i18n="startBtn">НАЧАТЬ</span>
+                    <span class="start-btn-arrows right"><span>&#10095;</span><span>&#10095;</span><span>&#10095;</span></span>
+                </button>
+            </div>
         </div>
 
         <!-- ===== SCREEN: Character Select ===== -->
