@@ -1,0 +1,4 @@
+.DS_Store
+*.py
+.claude/
+assets/Gemini_Generated_Image_*.png
