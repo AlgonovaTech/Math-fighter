@@ -455,7 +455,8 @@
     </div>
 
     <script type="module">
-    import imglyRemoveBackground from 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm';
+    const bgRemovalModule = await import('https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm');
+    const imglyRemoveBackground = bgRemovalModule.removeBackground;
 
     // State
     let originalFile = null;
