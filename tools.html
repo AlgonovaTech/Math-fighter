@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Factory | Algonova</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background: #0a0a0f;
+            color: #fff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 0;
+            border-bottom: 2px solid #333;
+            margin-bottom: 30px;
+        }
+
+        .header-title {
+            font-size: 14px;
+            color: #e91e63;
+            text-shadow: 0 0 20px rgba(233, 30, 99, 0.4);
+        }
+
+        .header-link {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            color: #888;
+            text-decoration: none;
+            border: 2px solid #555;
+            padding: 8px 14px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .header-link:hover {
+            border-color: #e91e63;
+            color: #e91e63;
+        }
+
+        /* ========== DROP ZONE ========== */
+        .dropzone {
+            border: 3px dashed #555;
+            border-radius: 12px;
+            padding: 50px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: rgba(20, 20, 40, 0.4);
+            margin-bottom: 24px;
+        }
+
+        .dropzone:hover, .dropzone.drag-over {
+            border-color: #e91e63;
+            background: rgba(233, 30, 99, 0.05);
+        }
+
+        .dropzone-icon {
+            font-size: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .dropzone-text {
+            font-size: 10px;
+            color: #888;
+            line-height: 2.2;
+        }
+
+        .dropzone-text span {
+            color: #e91e63;
+        }
+
+        .dropzone.has-file {
+            padding: 20px;
+            border-style: solid;
+            border-color: #4caf50;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        /* ========== CONTROLS ========== */
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-label {
+            font-size: 8px;
+            color: #888;
+        }
+
+        .control-input {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 9px;
+            background: rgba(20, 20, 40, 0.8);
+            border: 2px solid #555;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            width: 80px;
+            text-align: center;
+        }
+
+        .control-input:focus {
+            outline: none;
+            border-color: #e91e63;
+        }
+
+        .btn {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            padding: 12px 24px;
+            border: 3px solid #f48fb1;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.15s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(to bottom, #e91e63, #c2185b);
+            color: #fff;
+            box-shadow: 0 4px 0 #880e4f;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #880e4f;
+            filter: brightness(1.1);
+        }
+
+        .btn-primary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #880e4f;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+            filter: none;
+        }
+
+        .btn-download {
+            background: linear-gradient(to bottom, #4caf50, #388e3c);
+            color: #fff;
+            border-color: #81c784;
+            box-shadow: 0 4px 0 #1b5e20;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #1b5e20;
+            filter: brightness(1.1);
+        }
+
+        .btn-download:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 #1b5e20;
+        }
+
+        /* ========== PREVIEW AREA ========== */
+        .preview-area {
+            display: none;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .preview-area.visible {
+            display: flex;
+        }
+
+        .preview-box {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .preview-label {
+            font-size: 8px;
+            color: #888;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .preview-wrap {
+            background: rgba(20, 20, 40, 0.6);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-wrap.checkerboard {
+            background-image:
+                linear-gradient(45deg, #1a1a2e 25%, transparent 25%),
+                linear-gradient(-45deg, #1a1a2e 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #1a1a2e 75%),
+                linear-gradient(-45deg, transparent 75%, #1a1a2e 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+            background-color: #12121f;
+        }
+
+        .preview-wrap img {
+            max-width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+        }
+
+        .preview-arrow {
+            font-size: 24px;
+            color: #e91e63;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            flex-shrink: 0;
+        }
+
+        /* ========== PROGRESS ========== */
+        .progress-area {
+            display: none;
+            margin-bottom: 24px;
+        }
+
+        .progress-area.visible {
+            display: block;
+        }
+
+        .progress-bar-wrap {
+            background: rgba(20, 20, 40, 0.8);
+            border: 2px solid #333;
+            border-radius: 6px;
+            height: 30px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #e91e63, #9c27b0);
+            border-radius: 4px;
+            transition: width 0.3s;
+            width: 0%;
+        }
+
+        .progress-text {
+            font-size: 8px;
+            color: #888;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        /* ========== DOWNLOAD AREA ========== */
+        .download-area {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            gap: 16px;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .download-area.visible {
+            display: flex;
+        }
+
+        .result-info {
+            font-size: 8px;
+            color: #4caf50;
+            line-height: 2;
+        }
+
+        /* ========== BATCH AREA ========== */
+        .batch-results {
+            display: none;
+            margin-top: 30px;
+            border-top: 2px solid #333;
+            padding-top: 20px;
+        }
+
+        .batch-results.visible {
+            display: block;
+        }
+
+        .batch-title {
+            font-size: 10px;
+            color: #ce93d8;
+            margin-bottom: 16px;
+        }
+
+        .batch-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+        }
+
+        .batch-item {
+            background: rgba(20, 20, 40, 0.6);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .batch-item:hover {
+            border-color: #4caf50;
+        }
+
+        .batch-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        .batch-item-name {
+            font-size: 7px;
+            color: #888;
+            margin-top: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .batch-item .batch-item-wrap {
+            background-image:
+                linear-gradient(45deg, #1a1a2e 25%, transparent 25%),
+                linear-gradient(-45deg, #1a1a2e 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #1a1a2e 75%),
+                linear-gradient(-45deg, transparent 75%, #1a1a2e 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+            background-color: #12121f;
+            border-radius: 6px;
+            padding: 4px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 700px) {
+            .header-title { font-size: 10px; }
+            .preview-area.visible { flex-direction: column; }
+            .preview-arrow { transform: rotate(90deg); justify-content: center; padding: 8px 0; }
+            .controls { flex-direction: column; align-items: stretch; }
+            .btn { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-title">CHARACTER FACTORY</div>
+            <a href="index.html" class="header-link">&larr; Игра</a>
+        </div>
+
+        <!-- Drop Zone -->
+        <div class="dropzone" id="dropzone">
+            <span class="dropzone-icon">&#128444;</span>
+            <div class="dropzone-text">
+                Перетащи картинку сюда<br>
+                или <span>нажми для выбора</span><br>
+                <br>
+                JPG, PNG, WebP
+            </div>
+        </div>
+        <input type="file" id="fileInput" accept="image/*" multiple>
+
+        <!-- Controls -->
+        <div class="controls" id="controls" style="display:none">
+            <div class="control-group">
+                <span class="control-label">Высота:</span>
+                <input type="number" class="control-input" id="targetHeight" value="500" min="100" max="2000" step="50">
+                <span class="control-label">px</span>
+            </div>
+            <button class="btn btn-primary" id="processBtn" onclick="processImage()">
+                УБРАТЬ ФОН
+            </button>
+        </div>
+
+        <!-- Progress -->
+        <div class="progress-area" id="progressArea">
+            <div class="progress-bar-wrap">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText">Загрузка модели...</div>
+        </div>
+
+        <!-- Preview -->
+        <div class="preview-area" id="previewArea">
+            <div class="preview-box">
+                <div class="preview-label">ОРИГИНАЛ</div>
+                <div class="preview-wrap">
+                    <img id="originalPreview" src="" alt="">
+                </div>
+            </div>
+            <div class="preview-arrow">&#10132;</div>
+            <div class="preview-box">
+                <div class="preview-label">РЕЗУЛЬТАТ</div>
+                <div class="preview-wrap checkerboard">
+                    <img id="resultPreview" src="" alt="">
+                </div>
+            </div>
+        </div>
+
+        <!-- Download -->
+        <div class="download-area" id="downloadArea">
+            <div class="result-info" id="resultInfo"></div>
+            <button class="btn btn-download" onclick="downloadResult()">
+                СКАЧАТЬ PNG
+            </button>
+            <button class="btn btn-primary" onclick="resetTool()">
+                СЛЕДУЮЩАЯ КАРТИНКА
+            </button>
+        </div>
+
+        <!-- Batch results -->
+        <div class="batch-results" id="batchResults">
+            <div class="batch-title">ГОТОВЫЕ ПЕРСОНАЖИ</div>
+            <div class="batch-grid" id="batchGrid"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/dist/index.umd.js"></script>
+    <script>
+    // State
+    let originalFile = null;
+    let originalBlob = null;
+    let resultBlob = null;
+    let resultFilename = '';
+    const processedItems = [];
+
+    // DOM
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('fileInput');
+    const controls = document.getElementById('controls');
+    const processBtn = document.getElementById('processBtn');
+    const progressArea = document.getElementById('progressArea');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    const previewArea = document.getElementById('previewArea');
+    const originalPreview = document.getElementById('originalPreview');
+    const resultPreview = document.getElementById('resultPreview');
+    const downloadArea = document.getElementById('downloadArea');
+    const resultInfo = document.getElementById('resultInfo');
+    const batchResults = document.getElementById('batchResults');
+    const batchGrid = document.getElementById('batchGrid');
+
+    // ==================== DRAG & DROP ====================
+    dropzone.addEventListener('click', () => fileInput.click());
+
+    dropzone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropzone.classList.add('drag-over');
+    });
+
+    dropzone.addEventListener('dragleave', () => {
+        dropzone.classList.remove('drag-over');
+    });
+
+    dropzone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropzone.classList.remove('drag-over');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) handleFile(files[0]);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) handleFile(e.target.files[0]);
+    });
+
+    // ==================== FILE HANDLING ====================
+    function handleFile(file) {
+        if (!file.type.startsWith('image/')) {
+            alert('Пожалуйста, загрузи изображение (JPG, PNG, WebP)');
+            return;
+        }
+
+        originalFile = file;
+        originalBlob = file;
+        resultBlob = null;
+
+        // Show original preview
+        const url = URL.createObjectURL(file);
+        originalPreview.src = url;
+        resultPreview.src = '';
+
+        // Update dropzone
+        dropzone.innerHTML = `
+            <span class="dropzone-icon">&#9989;</span>
+            <div class="dropzone-text">
+                <span>${file.name}</span><br>
+                ${(file.size / 1024).toFixed(0)} KB
+            </div>
+        `;
+        dropzone.classList.add('has-file');
+
+        // Show controls and original preview
+        controls.style.display = 'flex';
+        previewArea.classList.add('visible');
+        downloadArea.classList.remove('visible');
+        progressArea.classList.remove('visible');
+    }
+
+    // ==================== PROCESS IMAGE ====================
+    async function processImage() {
+        if (!originalBlob) return;
+
+        processBtn.disabled = true;
+        progressArea.classList.add('visible');
+        downloadArea.classList.remove('visible');
+        progressBar.style.width = '0%';
+        progressText.textContent = 'Загрузка модели AI (~30MB, кешируется)...';
+
+        try {
+            // Remove background
+            const config = {
+                progress: (key, current, total) => {
+                    if (total > 0) {
+                        const pct = Math.round((current / total) * 80);
+                        progressBar.style.width = pct + '%';
+                        if (key === 'fetch:model') {
+                            progressText.textContent = `Загрузка модели... ${pct}%`;
+                        } else {
+                            progressText.textContent = `Обработка... ${pct}%`;
+                        }
+                    }
+                }
+            };
+
+            progressText.textContent = 'Удаление фона...';
+            const result = await imglyRemoveBackground(originalBlob, config);
+
+            progressBar.style.width = '85%';
+            progressText.textContent = 'Изменение размера...';
+
+            // Resize
+            const targetH = parseInt(document.getElementById('targetHeight').value) || 500;
+            const resizedBlob = await resizeImage(result, targetH);
+
+            progressBar.style.width = '100%';
+            progressText.textContent = 'Готово!';
+
+            // Show result
+            resultBlob = resizedBlob;
+            const baseName = originalFile.name.replace(/\.[^.]+$/, '');
+            resultFilename = baseName + '_nobg.png';
+
+            const resultUrl = URL.createObjectURL(resizedBlob);
+            resultPreview.src = resultUrl;
+
+            // Get dimensions for info
+            const img = new Image();
+            img.onload = () => {
+                resultInfo.textContent =
+                    `${img.width} x ${img.height} px  |  ${(resizedBlob.size / 1024).toFixed(0)} KB  |  PNG с прозрачностью`;
+            };
+            img.src = resultUrl;
+
+            downloadArea.classList.add('visible');
+
+            // Add to batch
+            addToBatch(resultFilename, resizedBlob);
+
+        } catch (err) {
+            console.error('Error:', err);
+            progressText.textContent = 'Ошибка: ' + err.message;
+            progressBar.style.width = '0%';
+        }
+
+        processBtn.disabled = false;
+    }
+
+    // ==================== RESIZE ====================
+    function resizeImage(blob, targetHeight) {
+        return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => {
+                const scale = targetHeight / img.height;
+                const newW = Math.round(img.width * scale);
+                const newH = targetHeight;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = newW;
+                canvas.height = newH;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, newW, newH);
+
+                canvas.toBlob((b) => resolve(b), 'image/png');
+            };
+            img.src = URL.createObjectURL(blob);
+        });
+    }
+
+    // ==================== DOWNLOAD ====================
+    function downloadResult() {
+        if (!resultBlob) return;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(resultBlob);
+        a.download = resultFilename;
+        a.click();
+    }
+
+    // ==================== BATCH ====================
+    function addToBatch(name, blob) {
+        processedItems.push({ name, blob, url: URL.createObjectURL(blob) });
+        renderBatch();
+    }
+
+    function renderBatch() {
+        if (processedItems.length === 0) return;
+        batchResults.classList.add('visible');
+        batchGrid.innerHTML = processedItems.map((item, i) => `
+            <div class="batch-item" onclick="downloadBatchItem(${i})">
+                <div class="batch-item-wrap">
+                    <img src="${item.url}" alt="${item.name}">
+                </div>
+                <div class="batch-item-name">${item.name}</div>
+            </div>
+        `).join('');
+    }
+
+    function downloadBatchItem(index) {
+        const item = processedItems[index];
+        const a = document.createElement('a');
+        a.href = item.url;
+        a.download = item.name;
+        a.click();
+    }
+
+    // ==================== RESET ====================
+    function resetTool() {
+        originalFile = null;
+        originalBlob = null;
+        resultBlob = null;
+        resultFilename = '';
+
+        dropzone.innerHTML = `
+            <span class="dropzone-icon">&#128444;</span>
+            <div class="dropzone-text">
+                Перетащи картинку сюда<br>
+                или <span>нажми для выбора</span><br>
+                <br>
+                JPG, PNG, WebP
+            </div>
+        `;
+        dropzone.classList.remove('has-file');
+        controls.style.display = 'none';
+        previewArea.classList.remove('visible');
+        downloadArea.classList.remove('visible');
+        progressArea.classList.remove('visible');
+        originalPreview.src = '';
+        resultPreview.src = '';
+        fileInput.value = '';
+    }
+    </script>
+</body>
+</html>
