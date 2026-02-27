@@ -403,14 +403,12 @@
 
         <!-- Controls -->
         <div class="controls" id="controls" style="display:none">
+            <button class="btn btn-primary" id="processBtn" style="flex:1">ОБРАБОТАТЬ</button>
             <div class="control-group">
                 <span class="control-label">Высота:</span>
                 <input type="number" class="control-input" id="targetHeight" value="500" min="100" max="2000" step="50">
                 <span class="control-label">px</span>
             </div>
-            <button class="btn btn-primary" id="processBtn" onclick="processImage()">
-                УБРАТЬ ФОН
-            </button>
         </div>
 
         <!-- Progress -->
@@ -441,10 +439,10 @@
         <!-- Download -->
         <div class="download-area" id="downloadArea">
             <div class="result-info" id="resultInfo"></div>
-            <button class="btn btn-download" onclick="downloadResult()">
+            <button class="btn btn-download" id="downloadBtn">
                 СКАЧАТЬ PNG
             </button>
-            <button class="btn btn-primary" onclick="resetTool()">
+            <button class="btn btn-primary" id="resetBtn">
                 СЛЕДУЮЩАЯ КАРТИНКА
             </button>
         </div>
@@ -456,8 +454,9 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/dist/index.umd.js"></script>
-    <script>
+    <script type="module">
+    import imglyRemoveBackground from 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.5.5/+esm';
+
     // State
     let originalFile = null;
     let originalBlob = null;
@@ -470,6 +469,7 @@
     const fileInput = document.getElementById('fileInput');
     const controls = document.getElementById('controls');
     const processBtn = document.getElementById('processBtn');
+    let processing = false;
     const progressArea = document.getElementById('progressArea');
     const progressBar = document.getElementById('progressBar');
     const progressText = document.getElementById('progressText');
@@ -539,8 +539,9 @@
 
     // ==================== PROCESS IMAGE ====================
     async function processImage() {
-        if (!originalBlob) return;
+        if (!originalBlob || processing) return;
 
+        processing = true;
         processBtn.disabled = true;
         progressArea.classList.add('visible');
         downloadArea.classList.remove('visible');
@@ -603,6 +604,7 @@
             progressBar.style.width = '0%';
         }
 
+        processing = false;
         processBtn.disabled = false;
     }
 
@@ -646,7 +648,7 @@
         if (processedItems.length === 0) return;
         batchResults.classList.add('visible');
         batchGrid.innerHTML = processedItems.map((item, i) => `
-            <div class="batch-item" onclick="downloadBatchItem(${i})">
+            <div class="batch-item" data-index="${i}">
                 <div class="batch-item-wrap">
                     <img src="${item.url}" alt="${item.name}">
                 </div>
@@ -688,6 +690,15 @@
         resultPreview.src = '';
         fileInput.value = '';
     }
+
+    // ==================== EVENT LISTENERS ====================
+    processBtn.addEventListener('click', () => processImage());
+    document.getElementById('downloadBtn').addEventListener('click', () => downloadResult());
+    document.getElementById('resetBtn').addEventListener('click', () => resetTool());
+    batchGrid.addEventListener('click', (e) => {
+        const item = e.target.closest('.batch-item');
+        if (item) downloadBatchItem(parseInt(item.dataset.index));
+    });
     </script>
 </body>
 </html>
