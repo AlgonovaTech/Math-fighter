@@ -171,7 +171,7 @@
 
         /* ========== WELCOME SCREEN ========== */
         #welcomeScreen {
-            background: url('assets/bg-welcome.jpg') center center / cover no-repeat;
+            background: url('assets/bg-welcome.png') center center / cover no-repeat;
             text-align: center;
             overflow: hidden;
             /* Break out of game-container to go full-width */
@@ -297,23 +297,9 @@
             max-width: 500px;
         }
 
-        /* Cover the baked-in button from bg image */
+        /* Cover div removed — new bg-welcome.png has no baked-in button */
         .start-btn-cover {
-            position: absolute;
-            bottom: 26%;
-            left: 0;
-            right: 0;
-            height: 18%;
-            z-index: 9;
-            background: linear-gradient(to bottom,
-                transparent 0%,
-                rgba(5, 2, 15, 0.85) 15%,
-                rgba(5, 2, 15, 1) 25%,
-                rgba(5, 2, 15, 1) 75%,
-                rgba(5, 2, 15, 0.85) 85%,
-                transparent 100%
-            );
-            pointer-events: none;
+            display: none;
         }
 
         .start-btn {
