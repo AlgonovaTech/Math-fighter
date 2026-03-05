@@ -836,6 +836,30 @@
             border-radius: 4px;
         }
 
+        /* Free text answer input */
+        .free-text-wrap {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+        .free-text-input {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            background: #1a1a2e;
+            border: 2px solid #e91e63;
+            border-radius: 10px;
+            color: #fff;
+            padding: 18px 16px;
+            width: 100%;
+            box-sizing: border-box;
+            outline: none;
+            text-align: center;
+        }
+        .free-text-input::placeholder { color: #666; font-size: 10px; }
+        .free-text-input:focus { border-color: #ff4081; box-shadow: 0 0 12px rgba(233,30,99,0.4); }
+        .free-text-submit { justify-content: center; }
+
         .quiz-feedback {
             position: fixed;
             top: 50%;
@@ -1154,7 +1178,7 @@
     // ==================== CONFIGURATION ====================
     const CONFIG = {
         questionTime: 30,
-        totalQuestions: 4,
+        totalQuestions: 10,
         basePoints: 100,
         speedBonusMax: 50,
     };
@@ -1637,7 +1661,7 @@
     ];
 
     // ==================== QUESTION DATA ====================
-    // 4 questions — 3 options each, all answers are accepted
+    // 10 questions — all answers are accepted
     const QUESTIONS = [
         {
             text: {
@@ -1673,10 +1697,20 @@
             options: [
                 { text: { ru: 'Это что-то на мужском', en: 'It\'s something in man-language' } },
                 { text: { ru: 'Это фраза для знакомства в баре', en: 'It\'s a pickup line at a bar' } },
-                { text: { ru: 'Это чувак, делающий звезду из кого хочешь', en: 'It\'s a guy who makes a star out of anyone' } },
+                { text: { ru: 'Это чувак, делающий звезду из кого хочешь', en: 'It\'s a dude who makes a star out of anyone' } },
             ],
             correct: 0,
             timeLimit: 30,
+        },
+        {
+            text: {
+                ru: 'Почему женщина предпочитает электронные часы?',
+                en: 'Why does a woman prefer digital watches?'
+            },
+            freeText: true,
+            options: [],
+            correct: 0,
+            timeLimit: 45,
         },
         {
             text: {
@@ -1689,6 +1723,71 @@
                 { text: { ru: 'Бот', en: 'Bot' } },
             ],
             correct: 1,
+            timeLimit: 30,
+        },
+        {
+            text: {
+                ru: 'Если твой парень по знаку зодиака — Скорпион, это значит:',
+                en: 'If your boyfriend is a Scorpio, it means:'
+            },
+            options: [
+                { text: { ru: 'Тебе нужно срочно освоить навыки экзорцизма и детективного агентства', en: 'You urgently need exorcism and detective agency skills' } },
+                { text: { ru: 'У тебя всегда есть на кого свалить свои плохие шутки', en: 'You always have someone to blame your bad jokes on' } },
+                { text: { ru: 'Что он просто родился в ноябре, но ты уже на всякий случай проверила его совместимость с твоим котом', en: 'He was just born in November, but you already checked his compatibility with your cat' } },
+            ],
+            correct: 0,
+            timeLimit: 30,
+        },
+        {
+            text: {
+                ru: 'Параллельная парковка — это:',
+                en: 'Parallel parking is:'
+            },
+            options: [
+                { text: { ru: 'Геометрическая фигура', en: 'A geometric shape' } },
+                { text: { ru: 'Приём в дзюдо', en: 'A judo technique' } },
+                { text: { ru: 'Индифферентность позиции', en: 'Indifference of position' } },
+            ],
+            correct: 0,
+            timeLimit: 30,
+        },
+        {
+            text: {
+                ru: 'Почему женщина всегда права:',
+                en: 'Why is a woman always right:'
+            },
+            options: [
+                { text: { ru: 'Это не я права, это ты не прав', en: 'It\'s not that I\'m right, it\'s that you\'re wrong' } },
+                { text: { ru: 'А ты не меняй тему разговора', en: 'Don\'t change the subject' } },
+                { text: { ru: 'Добро всегда побеждает', en: 'Good always wins' } },
+            ],
+            correct: 0,
+            timeLimit: 30,
+        },
+        {
+            text: {
+                ru: 'Какая константа наиболее строго выполняется во Вселенной:',
+                en: 'Which constant is most strictly observed in the Universe:'
+            },
+            options: [
+                { text: { ru: 'Скорость света плюс-минус сколько-то там', en: 'Speed of light plus or minus whatever' } },
+                { text: { ru: 'Количество калорий строго меньше дневной нормы', en: 'Calorie count strictly below daily norm' } },
+                { text: { ru: 'n−10, где n — возраст симпатичного мужчины за тем столиком', en: 'n−10, where n is the age of that cute guy at the table' } },
+            ],
+            correct: 0,
+            timeLimit: 30,
+        },
+        {
+            text: {
+                ru: 'Если женщина говорит «Я не обиделась», это значит:',
+                en: 'If a woman says "I\'m not offended", it means:'
+            },
+            options: [
+                { text: { ru: 'Беги', en: 'Run' } },
+                { text: { ru: 'Беги, но не забудь купить по дороге эклеры', en: 'Run, but don\'t forget to buy eclairs on the way' } },
+                { text: { ru: 'У тебя есть 10 секунд, чтобы вспомнить, в чём ты виноват', en: 'You have 10 seconds to remember what you did wrong' } },
+            ],
+            correct: 0,
             timeLimit: 30,
         },
     ];
@@ -1858,21 +1957,39 @@
             `${t('score')}: ${gameState.score}`;
 
         const answersEl = document.getElementById('quizAnswers');
-        answersEl.innerHTML = q.options.map((opt, i) => {
-            const text = opt.text ? (opt.text[currentLang] || opt.text.ru) : '';
-            const imgHtml = opt.image
-                ? `<img class="answer-img" src="${opt.image}" alt="">`
-                : '';
 
-            return `
-                <button class="quiz-answer-btn ${gameState.isAnswered ? 'disabled' : ''}"
-                        onclick="selectAnswer(${i})">
-                    <span class="num">${i + 1}</span>
-                    ${imgHtml}
-                    <span>${text}</span>
-                </button>
+        if (q.freeText) {
+            answersEl.innerHTML = `
+                <div class="free-text-wrap">
+                    <input type="text" class="free-text-input" id="freeTextInput"
+                           placeholder="${currentLang === 'ru' ? 'Введи свой ответ...' : 'Type your answer...'}"
+                           autocomplete="off" />
+                    <button class="quiz-answer-btn free-text-submit" onclick="submitFreeText()">
+                        <span>${currentLang === 'ru' ? 'ОТВЕТИТЬ' : 'SUBMIT'}</span>
+                    </button>
+                </div>
             `;
-        }).join('');
+            setTimeout(() => {
+                const inp = document.getElementById('freeTextInput');
+                if (inp) inp.focus();
+            }, 100);
+        } else {
+            answersEl.innerHTML = q.options.map((opt, i) => {
+                const text = opt.text ? (opt.text[currentLang] || opt.text.ru) : '';
+                const imgHtml = opt.image
+                    ? `<img class="answer-img" src="${opt.image}" alt="">`
+                    : '';
+
+                return `
+                    <button class="quiz-answer-btn ${gameState.isAnswered ? 'disabled' : ''}"
+                            onclick="selectAnswer(${i})">
+                        <span class="num">${i + 1}</span>
+                        ${imgHtml}
+                        <span>${text}</span>
+                    </button>
+                `;
+            }).join('');
+        }
     }
 
     function formatTime(seconds) {
@@ -1906,6 +2023,30 @@
                 }
             }
         }, 1000);
+    }
+
+    function submitFreeText() {
+        if (gameState.isAnswered) return;
+        gameState.isAnswered = true;
+        clearInterval(gameState.timerInterval);
+
+        const q = gameState.shuffledQuestions[gameState.currentQuestion];
+        const inp = document.getElementById('freeTextInput');
+        if (inp) inp.disabled = true;
+        const btn = document.querySelector('.free-text-submit');
+        if (btn) btn.classList.add('disabled');
+
+        const timeBonus = Math.round((gameState.timeRemaining / (q.timeLimit || CONFIG.questionTime)) * CONFIG.speedBonusMax);
+        gameState.score += CONFIG.basePoints + timeBonus;
+        gameState.correctCount++;
+        gameState.answers.push(true);
+
+        renderProgressBar();
+        document.getElementById('quizScoreDisplay').textContent = `${t('score')}: ${gameState.score}`;
+
+        setTimeout(() => {
+            showQuestion(gameState.currentQuestion + 1);
+        }, 1200);
     }
 
     function selectAnswer(index) {
